@@ -6,8 +6,8 @@ public class monopolyBoardandTokens extends JFrame{
 
 
 
-	Point[] locations = { new Point(630,643), new Point(587,643),new Point(544,643), new Point(501,643),new Point(458,643), new Point(415,643),new Point(372,643), new Point(329,643),
-			new Point(286,643), new Point(243,643),new Point(243,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),
+	Point[] locations = { new Point(630,643), new Point(570,643),new Point(510,643), new Point(450,643),new Point(390,643), new Point(330,643),new Point(270,643), new Point(210,643),
+			new Point(150,643), new Point(90,643),new Point(90,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),
 			new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),
 			new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),
 			new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10)};
@@ -269,8 +269,9 @@ public class monopolyBoardandTokens extends JFrame{
 		int i;
 		for(i=0;i<11;i++){
 			car.setPosition(locations[i].x, locations[i].y);
-			Thread.sleep(300);
-			System.out.println(locations[i].x);
+			repaint();
+			Thread.sleep(150);
+			
 		}
 
 
