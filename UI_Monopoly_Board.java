@@ -1,4 +1,4 @@
-//package sprint_One;
+package sprint_One;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,25 +22,23 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-
 public class UI_Monopoly_Board
 {	
 	//gets the path for particular file of choice
-	private static String image = "C:\\Users\\student\\workspace\\Test2\\src\\Monopoly_board.jpg";
-//	private static String image = "C:\\Users\\Guest 2\\workspace\\Java\\Software Engineering\\sprint_One\\Monopoly_board.jpg";
+	private static String image = "C:\\Users\\bolu_\\workspace\\Java\\Software Engineering\\sprint_One\\Monopoly_board.jpg";
 	//Creates a file object for the file that's to be opened
 	private static File inputImage = new File(image);
 	private static BufferedImage load_Image_Data; 
 	private static JLabel imageLabel;
 	private static JFrame imageFrame = new JFrame();
 	private static JPanel panel = new JPanel();
-	final static int field_Width = 90;
+	final static int field_Width = 60;
 	private static JTextField commandField = new JTextField(field_Width);
 	private static JLabel commandLabel = new JLabel("Enter Command: ");
 	private static JLabel resultLabel = new JLabel();
 	private Border blacklineBorder;
-	private final int ROWS = 10;
-	private final int COLUMNS = 10;
+	private final int ROWS = 35;
+	private final int COLUMNS = 20;
 	private JTextArea textArea =  new JTextArea(ROWS, COLUMNS);
 	
 	public UI_Monopoly_Board() throws IOException
@@ -92,22 +90,20 @@ public class UI_Monopoly_Board
 	public void commandPanel_With_ActionPerformed()
 	{	
 		blacklineBorder = BorderFactory.createLineBorder(Color.BLACK);
-		TitledBorder title = BorderFactory.createTitledBorder(blacklineBorder, "Command Panel");
 		
 		JButton button = new JButton("Enter");
 		button.addActionListener(new ActionListener() 
 		{
-			public void actionPerformed(ActionEvent listener) 
+			public void actionPerformed(ActionEvent e) 
 			{
 				String command = commandField.getText();
 				textArea.append(command + "\n");
 			}
 			
 		} );
-		
+
 		JPanel panel3 = new JPanel();
 		panel3.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		panel3.setBorder(title);
 		button.setPreferredSize(new Dimension(65,20));
 		panel3.add(commandLabel);
 		panel3.add(commandField);
