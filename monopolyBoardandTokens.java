@@ -22,7 +22,7 @@ public class monopolyBoardandTokens extends JFrame{
 			new Point(660,120),
 			new Point(660,160), new Point(660,220),new Point(660,280), new Point(660,340),new Point(660,400),
 			new Point(660,460),new Point(660,520), new Point(660,580), new Point(660,640)};
-	
+	Point defaultPosition = new Point(600,603);
 	
 	private int players;
 	private Token[] token ;
@@ -290,13 +290,16 @@ public class monopolyBoardandTokens extends JFrame{
 	
 	public void moveTokens() throws InterruptedException{
 		
-		int i,j;
+		int i,j, offset;
+		offset = 0;
 		for(i=0;i<token.length;i++){
 			for(j=0;j<locations.length;j++){
 				token[i].setPosition(locations[j].x, locations[j].y);
 				repaint();
 				Thread.sleep(150);
 			}
+			token[i].setPosition(defaultPosition.x + offset, defaultPosition.y+offset);
+			offset = offset + 15;
 		}
 	}
 	
