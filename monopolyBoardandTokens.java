@@ -32,7 +32,7 @@ public class monopolyBoardandTokens extends JFrame{
 	private static JPanel commandpanel ;
 	private static JPanel basepanel;
 
-	final static int field_Width = 20;
+	final static int field_Width = 30;
 	private static JTextField commandField = new JTextField(field_Width);
 	private static JLabel commandLabel = new JLabel("Enter Command: ");
 	
@@ -254,7 +254,7 @@ public class monopolyBoardandTokens extends JFrame{
 					commandpanel.add(commandLabel);
 					commandpanel.add(commandField);
 					commandpanel.add(button);
-					commandpanel.setBounds(750, 650, 500, 50);
+					commandpanel.setBounds(800, 650, 500, 55);
 					
 //					basepanel = new JPanel();
 //					basepanel.setLayout(new BorderLayout());
