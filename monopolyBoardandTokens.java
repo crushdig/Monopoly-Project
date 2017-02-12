@@ -1,76 +1,58 @@
-
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 
 public class monopolyBoardandTokens extends JFrame{
 
 
 
-	Point[] locations = { new Point(630,643), new Point(570,643),new Point(510,643), new Point(450,643),new Point(390,643), new Point(330,643),new Point(270,643), new Point(210,643),
-			new Point(150,643), new Point(90,643),new Point(90,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),
-			new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),
-			new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),
-			new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10),new Point(630,643), new Point(10,10)};
-	public static final int NUM_SQUARES = 40;
-	private static final int NUM_PROPERTIES = 28;
-	private static final String[] PROPERTY_NAMES = {
-			"Old Kent Rd","Whitechapel Rd","King's Cross Station","The AngelIslington",
-			"Euston Rd","Pentonville Rd",
-			"Pall Mall","Electric Co","Whitehall","Northumberland Ave","Marylebone Station"
-			,"Bow St","Marlborough St","Vine St",
-			"Strand","Fleet St","Trafalgar Sq","Fenchurch St Station","Leicester Sq",
-			"Coventry St","Water Works","Piccadilly",
-			"Regent St","Oxford St","Bond St","Liverpool St Station","Park Lane",
-	"Mayfair"};
-	private static final int[] PROPERTY_VALUES = {
-			60,60,200,100,100,120,
-			140,150,140,160,200,180,180,200,
-			220,220,240,200,260,260,150,280,
-			300,300,320,200,350,400};
-	private static final int[][] PROPERTY_RENTS = {
-			{2,10,30,90,160,250},{4,20,60,180,320,450},{25,50,100,200,200,200},{6,30,90,270,400,550},
-			{6,30,90,270,400,550},{8,40,100,300,450,600},
-			{10,50,150,450,625,750},{4,10,0,0,0,0},{10,50,150,450,625,750},{12,60,180,500,
-				700,900},{14,70,200,550,750,950},{25,50,100,200,200,200},{14,70,200,550,750,950}
-				,{16,80,220,600,800,1000},
-				{18,90,250,700,875,1050},{4,10,0,0,0,0},{18,90,250,700,875,1050},{25,50,100,200,200,200},
-				{20,100,300,750,925,1100},{25,50,100,200,200,200},{22,110,330,800,975,1150}
-				,{22,110,330,800,975,1150},{4,10,0,0,0,0},{22,120,360,850,1025,1200},
-				{26,130,390,900,1100,1275},{26,130,390,900,1100,1275},{28,150,450,1000,1200,1400},
-				{25,50,100,200,200,200},{35,175,500,1100,1300,1500}};
-	private static final int TYP_GO = 0;
-	private static final int TYP_SITE = 1;
-	private static final int TYP_STATION = 2;
-	private static final int TYP_UTILITY = 3;
-	private static final int TYP_COMMUNITY = 4;
-	private static final int TYP_CHANCE = 5;
-	private static final int TYP_JAIL = 6;
-	private static final int TYP_PARKING = 7;
-	private static final int TYP_GOTO_JAIL = 8;
-	private static final int TYP_TAX = 9;
-	private static final int[] SQUARE_TYPES = {
-			TYP_GO, TYP_SITE, TYP_COMMUNITY, TYP_SITE, TYP_TAX, TYP_STATION, TYP_SITE,
-			TYP_CHANCE, TYP_SITE, TYP_SITE,
-			TYP_JAIL, TYP_SITE, TYP_UTILITY, TYP_SITE, TYP_SITE, TYP_STATION, TYP_SITE,
-			TYP_COMMUNITY, TYP_SITE, TYP_SITE,
-			TYP_PARKING, TYP_SITE, TYP_CHANCE, TYP_SITE, TYP_SITE, TYP_STATION, TYP_SITE,
-			TYP_SITE, TYP_UTILITY, TYP_SITE,
-			TYP_GOTO_JAIL, TYP_SITE, TYP_SITE, TYP_COMMUNITY, TYP_SITE, TYP_STATION,
-			TYP_CHANCE, TYP_SITE, TYP_TAX, TYP_SITE};
-
-
+	Point[] locations = { new Point(630,643), new Point(570,643),new Point(510,643), 
+			new Point(450,643),new Point(390,643), new Point(330,643),new Point(270,643), new Point(210,643),
+			new Point(150,643), new Point(95,643),new Point(60,643), new Point(60,573),
+			new Point(60,503), new Point(60,433),new Point(60,383), new Point(60,323),
+			new Point(60,273), new Point(60,213),new Point(60,153), new Point(60,93),new Point(60,33), 
+			
+			new Point(120,13),new Point(180,13), new Point(230,13),new Point(280,13), 
+			new Point(340,13),new Point(400,13), new Point(460,13),new Point(520,13), new Point(580,13)
+			,new Point(660,60),
+			new Point(660,120),
+			new Point(660,160), new Point(660,220),new Point(660,280), new Point(660,340),new Point(660,400),
+			new Point(660,460),new Point(660,520), new Point(660,580), new Point(660,640)};
+	
+	
 	private int players;
 	private Token[] token ;
 
+	private static JPanel infopanel;
+	private static JPanel commandpanel ;
+	private static JPanel basepanel;
 
-
+	final static int field_Width = 20;
+	private static JTextField commandField = new JTextField(field_Width);
+	private static JLabel commandLabel = new JLabel("Enter Command: ");
+	
+	private Border blacklineBorder;
+	private final int ROWS = 35;
+	private final int COLUMNS = 40;
+	private JTextArea textArea =  new JTextArea(ROWS, COLUMNS);
+	private static JLabel resultLabel = new JLabel();
+	
 	private static JLabel monopolyLabel;
 
-	public monopolyBoardandTokens() throws InterruptedException{
+	public monopolyBoardandTokens(){
 
 		players = 6;
 		token = new Token[players];
 
+		
+		
+		
+		
+		
 		int offset=10;
 
 		//Initialise tokens and spaces them out with offset
@@ -80,13 +62,14 @@ public class monopolyBoardandTokens extends JFrame{
 		case 2 :	
 			token[0] = new Token();
 			token[0].setBounds(10, 10, 700, 700);
-			token[0].setPosition(670,643);
+
+			token[0].setPosition(600,603);
 
 			token[1] = new Token(Color.red);
-
+			
 			token[1].setBounds(10, 10, 700, 700);
 
-			token[1].setPosition(670+offset,643+offset);
+			token[1].setPosition(600+offset,603+offset);
 
 			break;
 
@@ -95,25 +78,21 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[0].setBounds(10, 10, 700, 700);
 
-			token[0].setPosition(670,643);
+			token[0].setPosition(600,603);
 
 			token[1] = new Token(Color.red);
 			
 			token[1].setBounds(10, 10, 700, 700);
 
-			token[1].setPosition(670+offset,643+offset);
-			
-			System.out.println(token[1].getX());
+			token[1].setPosition(600+offset,603+offset);
 
 			offset =offset+10;
 
 			token[2] = new Token(Color.blue);
 			
-			token[2].setBounds(10, 10, 1000, 1000);
+			token[2].setBounds(10, 10, 700, 700);
 
-			token[2].setPosition(670+offset,643+offset);
-			
-			System.out.println(token[2].getX());
+			token[2].setPosition(600+offset,603+offset);
 
 			break;
 			
@@ -122,21 +101,21 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[0].setBounds(10, 10, 700, 700);
 
-			token[0].setPosition(670,643);
+			token[0].setPosition(600,603);
 
 			token[1] = new Token(Color.red);
 			
 			token[1].setBounds(10, 10, 700, 700);
 
-			token[1].setPosition(670+offset,643+offset);
+			token[1].setPosition(600+offset,603+offset);
 
-			offset =offset+15;
+			offset =offset+10;
 
 			token[2] = new Token(Color.blue);
 			
 			token[2].setBounds(10, 10, 700, 700);
 
-			token[2].setPosition(670+offset,643+offset);
+			token[2].setPosition(600+offset,603+offset);
 
 			offset =offset+10;
 
@@ -144,7 +123,7 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[3].setBounds(10, 10, 700, 700);
 
-			token[3].setPosition(670+offset,643+offset);
+			token[3].setPosition(600+offset,603+offset);
 			break;
 			
 		case 5 :
@@ -152,13 +131,13 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[0].setBounds(10, 10, 700, 700);
 
-			token[0].setPosition(670,643);
+			token[0].setPosition(600,603);
 
 			token[1] = new Token(Color.red);
 			
 			token[1].setBounds(10, 10, 700, 700);
 
-			token[1].setPosition(670+offset,643+offset);
+			token[1].setPosition(600+offset,603+offset);
 
 			offset =offset+10;
 
@@ -166,7 +145,7 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[2].setBounds(10, 10, 700, 700);
 
-			token[2].setPosition(670+offset,643+offset);
+			token[2].setPosition(600+offset,603+offset);
 
 			offset =offset+10;
 
@@ -174,7 +153,7 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[3].setBounds(10, 10, 700, 700);
 
-			token[3].setPosition(670+offset,643+offset);
+			token[3].setPosition(600+offset,603+offset);
 
 			offset =offset+10;
 
@@ -182,7 +161,7 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[4].setBounds(10, 10, 700, 700);
 
-			token[4].setPosition(670+offset,643+offset);
+			token[4].setPosition(600+offset,603+offset);
 
 			break;
 		case 6:
@@ -190,13 +169,13 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[0].setBounds(10, 10, 700, 700);
 
-			token[0].setPosition(670,643);
+			token[0].setPosition(600,603);
 
 			token[1] = new Token(Color.red);
 			
 			token[1].setBounds(10, 10, 700, 700);
 
-			token[1].setPosition(670+offset,643+offset);
+			token[1].setPosition(600+offset,603+offset);
 
 			offset =offset+10;
 
@@ -204,7 +183,7 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[2].setBounds(10, 10, 700, 700);
 
-			token[2].setPosition(670+offset,643+offset);
+			token[2].setPosition(600+offset,603+offset);
 
 			offset =offset+10;
 
@@ -212,7 +191,7 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[3].setBounds(10, 10, 700, 700);
 
-			token[3].setPosition(670+offset,643+offset);
+			token[3].setPosition(600+offset,603+offset);
 
 			offset =offset+10;
 
@@ -220,7 +199,7 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[4].setBounds(10, 10, 700, 700);
 
-			token[4].setPosition(670+offset,643+offset);
+			token[4].setPosition(600+offset,603+offset);
 
 			offset =offset+10;
 
@@ -228,7 +207,7 @@ public class monopolyBoardandTokens extends JFrame{
 			
 			token[5].setBounds(10, 10, 700, 700);
 
-			token[5].setPosition(670+offset,643+offset);
+			token[5].setPosition(600+offset,603+offset);
 
 			break;
 		default :
@@ -236,59 +215,100 @@ public class monopolyBoardandTokens extends JFrame{
 		}
 
 
-		JLabel monopolyLabel = new JLabel(new ImageIcon("Monopoly Board.jpg"));
-		monopolyLabel.setBounds(0, 0, 800, 750);
+		JLabel monopolyLabel = new JLabel(new ImageIcon("Board.jpg"));
+		monopolyLabel.setBounds(-50, -30, 800, 750);
 
-		Token car = new Token(Color.orange);
-				
-				car.setBounds(10, 10, 700, 700);
-			   
-				
-				 car.setPosition(673,643);
 		
+				 
+				 infopanel = new JPanel();
+				 
+					JScrollPane scrollPane = new JScrollPane(textArea);
+					blacklineBorder = BorderFactory.createLineBorder(Color.BLACK);
+					TitledBorder title = BorderFactory.createTitledBorder(blacklineBorder, "Information Panel");
+					scrollPane.getPreferredSize();
+					infopanel.setBorder(title);
+					infopanel.add(resultLabel, BorderLayout.NORTH);
+					textArea.setEditable(false);
+					infopanel.add(scrollPane);
+					infopanel.setBounds(750, 0, 600, 600);
 		
+					commandpanel = new JPanel();
+					
+					blacklineBorder = BorderFactory.createLineBorder(Color.BLACK);
+					
+					JButton button = new JButton("Enter");
+					button.addActionListener(new ActionListener() 
+					{
+						public void actionPerformed(ActionEvent e) 
+						{
+							String command = commandField.getText();
+							textArea.append(command + "\n");
+						}
+						
+					} );
+
+					
+					commandpanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					button.setPreferredSize(new Dimension(65,20));
+					commandpanel.add(commandLabel);
+					commandpanel.add(commandField);
+					commandpanel.add(button);
+					commandpanel.setBounds(750, 650, 500, 50);
+					
+//					basepanel = new JPanel();
+//					basepanel.setLayout(new BorderLayout());
+//					basepanel.add(infopanel,BorderLayout.EAST);
+//					basepanel.add(commandpanel,BorderLayout.SOUTH);
+//					basepanel.setBounds(0, 0, 1500, 1500);
+					
 		JLayeredPane lp = getLayeredPane();
+		
+		//lp.add(basepanel, new Integer(0));
+		
+		lp.add(commandpanel);
+		lp.add(infopanel);
+			
+
+		lp.add(monopolyLabel, new Integer(1));
+		lp.add(token[0],new Integer(2));
+		lp.add(token[1],new Integer(3));
+		lp.add(token[2],new Integer(4));
+		lp.add(token[3],new Integer(5));
+		lp.add(token[4],new Integer(6));
+		lp.add(token[5],new Integer(7));
 
 
-		lp.add(monopolyLabel, new Integer(0));
-		lp.add(token[0],new Integer(1));
-		lp.add(token[1],new Integer(2));
-		lp.add(token[2],new Integer(3));
-		lp.add(token[3],new Integer(4));
-		lp.add(token[4],new Integer(5));
-		lp.add(token[5],new Integer(6));
-
-
-		lp.add(car,new Integer(2));
 
 		
 		setSize(1500,1500);
 		setTitle("Monopoly");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-		int i;
-		for(i=0;i<11;i++){
-			car.setPosition(locations[i].x, locations[i].y);
-			repaint();
-			Thread.sleep(150);
-			
-		}
-
+	
 
 	}
 	
-//	public void moveToken(Token T){
-//		int i;
-//		for(i=0;i<locations.length;i++){
-//			T.setPosition(locations[0].x, locations[0].y);
-//		}
-//	}
+	public void moveTokens() throws InterruptedException{
+		
+		int i,j;
+		for(i=0;i<token.length;i++){
+			for(j=0;j<locations.length;j++){
+				token[i].setPosition(locations[j].x, locations[j].y);
+				repaint();
+				Thread.sleep(500);
+			}
+		}
+	}
+	
+
 
 	public static void main(String[] args) throws InterruptedException {
 		// TODO Auto-generated method stub
 
 
 		monopolyBoardandTokens m = new monopolyBoardandTokens();
+		m.moveTokens();
+		
 		
 		
 	}
