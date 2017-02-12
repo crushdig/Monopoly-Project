@@ -288,7 +288,7 @@ public class UI_Monopoly_Board extends JFrame
 		commandpanel.add(commandLabel);
 		commandpanel.add(commandField);
 		commandpanel.add(button);
-		commandpanel.setBounds(750, 650, 500, 50);
+		commandpanel.setBounds(800, 650, 500, 50);
 					
 //					basepanel = new JPanel();
 //					basepanel.setLayout(new BorderLayout());
