@@ -295,7 +295,7 @@ public class monopolyBoardandTokens extends JFrame{
 			for(j=0;j<locations.length;j++){
 				token[i].setPosition(locations[j].x, locations[j].y);
 				repaint();
-				Thread.sleep(500);
+				Thread.sleep(150);
 			}
 		}
 	}
