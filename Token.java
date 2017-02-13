@@ -1,6 +1,8 @@
 import java.awt.*;
 import javax.swing.JComponent;
-
+//Each token has variables for location, dimension and shape, there's a constructor that
+//allows the user to specify the color of the shape
+//the neccessary accessor and mutator functions are provided
 public class Token extends JComponent{
 	/**
 	 * 
@@ -53,8 +55,4 @@ public class Token extends JComponent{
 	 	 g2.draw(this.shape);
 	}
 	
-	public Shape getShape() {
-		// TODO Auto-generated method stub
-		return this.shape;
-	}
 }
