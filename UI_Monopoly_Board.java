@@ -1,7 +1,8 @@
 package sprint_One;
 
-//Code Written by all team members
-//A layered pane was used to place all components on the frame at the desired locations
+/* Code written by: lagosBoys
+ *A layered pane was used to place all components on the frame at the desired locations 
+ */
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -37,22 +38,22 @@ public class UI_Monopoly_Board extends JFrame
 	private int players;
 	private Token[] token ;
 
-	private static JPanel infopanel;
-	private static JPanel commandpanel ;
+	private static JPanel infoPanel;
+	private static JPanel commandPanel;
 
-
+	//creates a fixed length for the text field used by the command field
 	final static int field_Width = 20;
 	private static JTextField commandField = new JTextField(field_Width);
 	private static JLabel commandLabel = new JLabel("Enter Command: ");
 	
-	private Border blacklineBorder;
+	private Border blackLineBorder;
 	private final int ROWS = 35;
 	private final int COLUMNS = 40;
 	private JTextArea textArea =  new JTextArea(ROWS, COLUMNS);
-	private static JLabel resultLabel = new JLabel();
-	private JLayeredPane layeredPane = getLayeredPane();
+	private static JLabel echoed_Text_Label = new JLabel();
+	private JLayeredPane layeredPane = getLayeredPane(); //The use of a JLayeredPane allows easier and more flexible specification of component positions 
 	
-	private static JLabel monopolyLabel;
+	private static JLabel monopolyImageLabel;
 
 	public UI_Monopoly_Board()
 	{
@@ -223,10 +224,10 @@ public class UI_Monopoly_Board extends JFrame
 		}
 
 		//The location of the image should be specified here
-		monopolyLabel = new JLabel(new ImageIcon("Board.jpg"));
-		monopolyLabel.setBounds(-50, -30, 800, 750);
+		monopolyImageLabel = new JLabel(new ImageIcon("Monopoly_board.jpg"));
+		monopolyImageLabel.setBounds(-50, -30, 800, 750);
 		//The image and the tokens are added to the pane at different levels allowing them to overlap
-		layeredPane.add(monopolyLabel, new Integer(1));
+		layeredPane.add(monopolyImageLabel, new Integer(1));
 		layeredPane.add(token[0], new Integer(2));
 		layeredPane.add(token[1], new Integer(3));
 		layeredPane.add(token[2], new Integer(4));
@@ -236,47 +237,53 @@ public class UI_Monopoly_Board extends JFrame
 
 		
 		setSize(1500, 750);
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		setExtendedState(JFrame.MAXIMIZED_BOTH); //Sets the default window for the JFrame as a maximised
 		this.setResizable(false);
 		setTitle("Welcome to Monopoly");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Ensures the JFrame operation ends completely upon exiting the window 
 		setVisible(true);
 	}
-	//This function displays the information panel and adds it to the pane
+	
+	//This method displays the information panel and adds it to the pane
 	public void information_Panel()
 	{
-		infopanel = new JPanel();
+		infoPanel = new JPanel();
 		 
 		JScrollPane scrollPane = new JScrollPane(textArea);
-		blacklineBorder = BorderFactory.createLineBorder(Color.BLACK);
-		TitledBorder title = BorderFactory.createTitledBorder(blacklineBorder, "Information Panel");
+		blackLineBorder = BorderFactory.createLineBorder(Color.BLACK);
+		TitledBorder title = BorderFactory.createTitledBorder(blackLineBorder, "Information Panel");
+	
+		infoPanel.setBorder(title);
+		infoPanel.add(echoed_Text_Label, BorderLayout.NORTH);
 		
-		scrollPane.getPreferredSize();
-		infopanel.setBorder(title);
-		infopanel.add(resultLabel, BorderLayout.NORTH);
-		
+		//prevents any information from being added or deleted from the information panel.
 		textArea.setEditable(false);
-		infopanel.add(scrollPane);
-		infopanel.setBounds(750, 0, 600, 600);
+		infoPanel.add(scrollPane);
+		infoPanel.setBounds(750, 0, 600, 600); //specifies the desired coordinates of the panel being added to the layered pane
 		
-		layeredPane.add(infopanel);
+		layeredPane.add(infoPanel);
 	}
 		
-	//This function displays the command panel and adds it to the pane
+	//This method displays the command panel and adds it to the pane
 	public void command_Panel()
 	{
-		commandpanel = new JPanel();
+		commandPanel = new JPanel();
 		
-		blacklineBorder = BorderFactory.createLineBorder(Color.BLACK);
+		blackLineBorder = BorderFactory.createLineBorder(Color.BLACK);
 		
 		JButton button = new JButton("Enter");
+		
+		/* implements the actionlistener interface on the button to help execute a command when the
+		 * button is clicked
+		 */
 		button.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
 				if(commandField.getText().isEmpty())
 				{
-					
+					String command = null;
+					textArea.append(command);
 				}
 				
 				else
@@ -287,23 +294,20 @@ public class UI_Monopoly_Board extends JFrame
 			}			
 		} );
 		
+		//This invokes the actionListeners interface for actionPerformed (quick way to implement a key listener on the keyboards Enter button)
 		getRootPane().setDefaultButton(button);
 		
-
-					
-		commandpanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		commandPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		button.setPreferredSize(new Dimension(65,20));
-		commandpanel.add(commandLabel);
-		commandpanel.add(commandField);
-		commandpanel.add(button);
-		commandpanel.setBounds(800, 630, 500, 50);
-					
-
+		commandPanel.add(commandLabel);
+		commandPanel.add(commandField);
+		commandPanel.add(button);
+		commandPanel.setBounds(800, 630, 500, 50); //specifies the desired coordinates of the panel being added to the layered pane
 		
-		layeredPane.add(commandpanel);
-
+		layeredPane.add(commandPanel);
 	}
-	//Function moves te tokens round the board one at a time
+	
+	//Method which moves the tokens round the board one at a time
 	public void moveTokens() throws InterruptedException
 	{
 		
@@ -316,6 +320,7 @@ public class UI_Monopoly_Board extends JFrame
 			{
 				token[i].setPosition(locations[j].x, locations[j].y);
 				repaint();
+				//controls the movement speed of the tokens across the board allowing for easy detection of their movement
 				Thread.sleep(300);
 			}
 			
