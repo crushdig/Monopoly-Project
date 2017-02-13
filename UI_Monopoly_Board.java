@@ -288,6 +288,7 @@ public class UI_Monopoly_Board extends JFrame {
         else {
           String command = commandField.getText();
           textArea.append(command + "\n");
+          commandField.setText("");
         }
       }
     });
