@@ -59,8 +59,4 @@ public class Token extends JComponent{
 	 	 g2.draw(this.shape);
 	}
 	
-	public Shape getShape() {
-		// TODO Auto-generated method stub
-		return this.shape;
-	}
 }
