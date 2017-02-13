@@ -1,4 +1,7 @@
-package sprint_One;
+//package sprint_One;
+
+//Code Written by all team members
+//A layered pane was used to place all components on the frame at the desired locations
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,7 +13,11 @@ import javax.swing.border.TitledBorder;
 
 public class UI_Monopoly_Board extends JFrame
 {
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	//Array of coordinates for the position of each square on the board
 	Point[] locations = { new Point(630,643), new Point(570,643),new Point(510,643), 
 			new Point(450,643),new Point(390,643), new Point(330,643),new Point(270,643), new Point(210,643),
 			new Point(150,643), new Point(95,643),new Point(60,643), new Point(60,573),
@@ -24,7 +31,7 @@ public class UI_Monopoly_Board extends JFrame
 			new Point(660,160), new Point(660,220),new Point(660,280), new Point(660,340),new Point(660,400),
 			new Point(660,460),new Point(660,520), new Point(660,580), new Point(660,640)
 		};
-	
+	//The default position or starting point which is go
 	Point defaultPosition = new Point(600,603);
 	
 	private int players;
@@ -32,7 +39,7 @@ public class UI_Monopoly_Board extends JFrame
 
 	private static JPanel infopanel;
 	private static JPanel commandpanel ;
-//	private static JPanel basepanel;
+
 
 	final static int field_Width = 20;
 	private static JTextField commandField = new JTextField(field_Width);
@@ -43,9 +50,9 @@ public class UI_Monopoly_Board extends JFrame
 	private final int COLUMNS = 40;
 	private JTextArea textArea =  new JTextArea(ROWS, COLUMNS);
 	private static JLabel resultLabel = new JLabel();
-	private JLayeredPane lp = getLayeredPane();
+	private JLayeredPane layeredPane = getLayeredPane();
 	
-//	private static JLabel monopolyLabel;
+	private static JLabel monopolyLabel;
 
 	public UI_Monopoly_Board()
 	{
@@ -54,7 +61,7 @@ public class UI_Monopoly_Board extends JFrame
 
 		int offset = 10;
 
-		//Initialise tokens and spaces them out with offset
+		//Initialise tokens depending on number of players and spaces them out with offset
 
 		switch(players)
 		{
@@ -215,26 +222,27 @@ public class UI_Monopoly_Board extends JFrame
 				System.out.println("Invalid number of players");
 		}
 
-
-		JLabel monopolyLabel = new JLabel(new ImageIcon("Monopoly_board.jpg"));
+		//The location of the image should be specified here
+		monopolyLabel = new JLabel(new ImageIcon("Board.jpg"));
 		monopolyLabel.setBounds(-50, -30, 800, 750);
-
-		lp.add(monopolyLabel, new Integer(1));
-		lp.add(token[0], new Integer(2));
-		lp.add(token[1], new Integer(3));
-		lp.add(token[2], new Integer(4));
-		lp.add(token[3], new Integer(5));
-		lp.add(token[4], new Integer(6));
-		lp.add(token[5], new Integer(7));
+		//The image and the tokens are added to the pane at different levels allowing them to overlap
+		layeredPane.add(monopolyLabel, new Integer(1));
+		layeredPane.add(token[0], new Integer(2));
+		layeredPane.add(token[1], new Integer(3));
+		layeredPane.add(token[2], new Integer(4));
+		layeredPane.add(token[3], new Integer(5));
+		layeredPane.add(token[4], new Integer(6));
+		layeredPane.add(token[5], new Integer(7));
 
 		
 		setSize(1500, 750);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setResizable(false);
 		setTitle("Welcome to Monopoly");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
-		
+	//This function displays the information panel and adds it to the pane
 	public void information_Panel()
 	{
 		infopanel = new JPanel();
@@ -251,10 +259,10 @@ public class UI_Monopoly_Board extends JFrame
 		infopanel.add(scrollPane);
 		infopanel.setBounds(750, 0, 600, 600);
 		
-		lp.add(infopanel);
+		layeredPane.add(infopanel);
 	}
 		
-	
+	//This function displays the command panel and adds it to the pane
 	public void command_Panel()
 	{
 		commandpanel = new JPanel();
@@ -290,16 +298,12 @@ public class UI_Monopoly_Board extends JFrame
 		commandpanel.add(button);
 		commandpanel.setBounds(800, 630, 500, 50);
 					
-//					basepanel = new JPanel();
-//					basepanel.setLayout(new BorderLayout());
-//					basepanel.add(infopanel,BorderLayout.EAST);
-//					basepanel.add(commandpanel,BorderLayout.SOUTH);
-//					basepanel.setBounds(0, 0, 1500, 1500);
+
 		
-		lp.add(commandpanel);
+		layeredPane.add(commandpanel);
 
 	}
-	
+	//Function moves te tokens round the board one at a time
 	public void moveTokens() throws InterruptedException
 	{
 		
@@ -312,7 +316,7 @@ public class UI_Monopoly_Board extends JFrame
 			{
 				token[i].setPosition(locations[j].x, locations[j].y);
 				repaint();
-				Thread.sleep(150);
+				Thread.sleep(300);
 			}
 			
 			token[i].setPosition(defaultPosition.x + offset, defaultPosition.y+offset);
