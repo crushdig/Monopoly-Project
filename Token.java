@@ -1,14 +1,18 @@
+package sprint_One;
+
 import java.awt.*;
 import javax.swing.JComponent;
-//Each token has variables for location, dimension and shape, there's a constructor that
-//allows the user to specify the color of the shape
-//the neccessary accessor and mutator functions are provided
+
+/*Each token has variables for location, dimension and shape, there's a constructor that
+ * allows the user to specify the colour of the shape
+ * the necessary accessor and mutator functions are provided
+ */
 public class Token extends JComponent{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int lenght;
+	private int length;
 	private int breadth;
 	private int x;
 	private int y;
@@ -17,11 +21,11 @@ public class Token extends JComponent{
 	public Token(){ 
 		super();
 		setVisible(true);
-		this.lenght = 15;
+		this.length = 15;
 		this.breadth =15;
 		this.x = 5;
 		this.y = 5;
-		this.shape = new Rectangle(this.x,this.y, this.lenght, this.breadth);
+		this.shape = new Rectangle(this.x,this.y, this.length, this.breadth);
 		this.color = Color.BLACK;
 		
 	}
@@ -39,7 +43,7 @@ public class Token extends JComponent{
 		return this.y;
 	}
 	
-	
+	//Method which specifies the x and y coordinates of the tokens
 	public void setPosition(int x, int y){
 		this.x = x;
 		this.y = y;
@@ -50,9 +54,13 @@ public class Token extends JComponent{
 	 	super.paintComponent(g);
 	 	
 	 	g2.setColor(color);
-	 	g2.fill(shape);
+	 	g2.fill(shape); //fills the shape with the colour specified
 	 
 	 	 g2.draw(this.shape);
 	}
 	
+	public Shape getShape() {
+		// TODO Auto-generated method stub
+		return this.shape;
+	}
 }
