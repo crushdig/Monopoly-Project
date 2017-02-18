@@ -36,6 +36,7 @@ public class UI_Monopoly_Board extends JFrame {
 
   private int players;
   private Token[] token;
+  private Players[] playerDetails;
 
   private static JPanel infoPanel;
   private static JPanel commandPanel;
@@ -50,176 +51,228 @@ public class UI_Monopoly_Board extends JFrame {
   private final int COLUMNS = 40;
   private JTextArea textArea = new JTextArea(ROWS, COLUMNS);
   private static JLabel echoed_Text_Label = new JLabel();
-  private JLayeredPane layeredPane = getLayeredPane(); // The use of a JLayeredPane allows easier
-                                                       // and more flexible specification of
-                                                       // component positions
+  private JLayeredPane layeredPane =
+      getLayeredPane(); /*
+                         * The use of a JLayeredPane allows easier and more flexible specification
+                         * of component positions
+                         */
 
   private static JLabel monopolyImageLabel;
 
   public UI_Monopoly_Board() {
-    players = 6;
-    token = new Token[players];
+
+    JOptionPane.showMessageDialog(null,
+        "Hello, Prepare to ruin your friendship with a wonderful game of monopoly!");
+
+    String playerNumber = JOptionPane.showInputDialog(null, "Please enter the number of players");
+
+    players = Integer.parseInt(playerNumber);
 
     int offset = 10;
 
     // Initialise tokens depending on number of players and spaces them out with offset
 
-    switch (players) {
-      case 2:
-        token[0] = new Token();
-        token[0].setBounds(10, 10, 700, 700);
+    token = new Token[players];
 
-        token[0].setPosition(600, 603);
+    playerDetails = new Players[players];
 
-        token[1] = new Token(Color.red);
+    if (players >= 2 || players <= 6) {
+      switch (players) {
+        case 2:
+          token[0] = new Token();
+          token[0].setBounds(10, 10, 700, 700);
 
-        token[1].setBounds(10, 10, 700, 700);
+          token[0].setPosition(600, 603);
 
-        token[1].setPosition(600 + offset, 603 + offset);
+          token[1] = new Token(Color.red);
 
-        break;
+          token[1].setBounds(10, 10, 700, 700);
 
-      case 3:
-        token[0] = new Token();
+          token[1].setPosition(600 + offset, 603 + offset);
 
-        token[0].setBounds(10, 10, 700, 700);
+          layeredPane.add(token[0], 1);
+          layeredPane.add(token[1], 2);
 
-        token[0].setPosition(600, 603);
+          playerDetails();
 
-        token[1] = new Token(Color.red);
 
-        token[1].setBounds(10, 10, 700, 700);
 
-        token[1].setPosition(600 + offset, 603 + offset);
+          break;
 
-        offset = offset + 10;
+        case 3:
+          token[0] = new Token();
 
-        token[2] = new Token(Color.blue);
+          token[0].setBounds(10, 10, 700, 700);
 
-        token[2].setBounds(10, 10, 700, 700);
+          token[0].setPosition(600, 603);
 
-        token[2].setPosition(600 + offset, 603 + offset);
+          token[1] = new Token(Color.red);
 
-        break;
+          token[1].setBounds(10, 10, 700, 700);
 
-      case 4:
-        token[0] = new Token();
+          token[1].setPosition(600 + offset, 603 + offset);
 
-        token[0].setBounds(10, 10, 700, 700);
+          offset = offset + 10;
 
-        token[0].setPosition(600, 603);
+          token[2] = new Token(Color.blue);
 
-        token[1] = new Token(Color.red);
+          token[2].setBounds(10, 10, 700, 700);
 
-        token[1].setBounds(10, 10, 700, 700);
+          token[2].setPosition(600 + offset, 603 + offset);
 
-        token[1].setPosition(600 + offset, 603 + offset);
+          layeredPane.add(token[0], 1);
+          layeredPane.add(token[1], 2);
+          layeredPane.add(token[2], 3);
 
-        offset = offset + 10;
+          playerDetails();
 
-        token[2] = new Token(Color.blue);
+          break;
 
-        token[2].setBounds(10, 10, 700, 700);
+        case 4:
+          token[0] = new Token();
 
-        token[2].setPosition(600 + offset, 603 + offset);
+          token[0].setBounds(10, 10, 700, 700);
 
-        offset = offset + 10;
+          token[0].setPosition(600, 603);
 
-        token[3] = new Token(Color.green);
+          token[1] = new Token(Color.red);
 
-        token[3].setBounds(10, 10, 700, 700);
+          token[1].setBounds(10, 10, 700, 700);
 
-        token[3].setPosition(600 + offset, 603 + offset);
-        break;
+          token[1].setPosition(600 + offset, 603 + offset);
 
-      case 5:
-        token[0] = new Token();
+          offset = offset + 10;
 
-        token[0].setBounds(10, 10, 700, 700);
+          token[2] = new Token(Color.blue);
 
-        token[0].setPosition(600, 603);
+          token[2].setBounds(10, 10, 700, 700);
 
-        token[1] = new Token(Color.red);
+          token[2].setPosition(600 + offset, 603 + offset);
 
-        token[1].setBounds(10, 10, 700, 700);
+          offset = offset + 10;
 
-        token[1].setPosition(600 + offset, 603 + offset);
+          token[3] = new Token(Color.green);
 
-        offset = offset + 10;
+          token[3].setBounds(10, 10, 700, 700);
 
-        token[2] = new Token(Color.blue);
+          token[3].setPosition(600 + offset, 603 + offset);
 
-        token[2].setBounds(10, 10, 700, 700);
+          layeredPane.add(token[0], 1);
+          layeredPane.add(token[1], 2);
+          layeredPane.add(token[2], 3);
+          layeredPane.add(token[3], 4);
 
-        token[2].setPosition(600 + offset, 603 + offset);
+          playerDetails();
 
-        offset = offset + 10;
+          break;
 
-        token[3] = new Token(Color.green);
+        case 5:
+          token[0] = new Token();
 
-        token[3].setBounds(10, 10, 700, 700);
+          token[0].setBounds(10, 10, 700, 700);
 
-        token[3].setPosition(600 + offset, 603 + offset);
+          token[0].setPosition(600, 603);
 
-        offset = offset + 10;
+          token[1] = new Token(Color.red);
 
-        token[4] = new Token(Color.yellow);
+          token[1].setBounds(10, 10, 700, 700);
 
-        token[4].setBounds(10, 10, 700, 700);
+          token[1].setPosition(600 + offset, 603 + offset);
 
-        token[4].setPosition(600 + offset, 603 + offset);
+          offset = offset + 10;
 
-        break;
+          token[2] = new Token(Color.blue);
 
-      case 6:
-        token[0] = new Token();
+          token[2].setBounds(10, 10, 700, 700);
 
-        token[0].setBounds(10, 10, 700, 700);
+          token[2].setPosition(600 + offset, 603 + offset);
 
-        token[0].setPosition(600, 603);
+          offset = offset + 10;
 
-        token[1] = new Token(Color.red);
+          token[3] = new Token(Color.green);
 
-        token[1].setBounds(10, 10, 700, 700);
+          token[3].setBounds(10, 10, 700, 700);
 
-        token[1].setPosition(600 + offset, 603 + offset);
+          token[3].setPosition(600 + offset, 603 + offset);
 
-        offset = offset + 10;
+          offset = offset + 10;
 
-        token[2] = new Token(Color.blue);
+          token[4] = new Token(Color.yellow);
 
-        token[2].setBounds(10, 10, 700, 700);
+          token[4].setBounds(10, 10, 700, 700);
 
-        token[2].setPosition(600 + offset, 603 + offset);
+          token[4].setPosition(600 + offset, 603 + offset);
 
-        offset = offset + 10;
+          layeredPane.add(token[0], 1);
+          layeredPane.add(token[1], 2);
+          layeredPane.add(token[2], 3);
+          layeredPane.add(token[3], 4);
+          layeredPane.add(token[4], 5);
 
-        token[3] = new Token(Color.green);
+          playerDetails();
 
-        token[3].setBounds(10, 10, 700, 700);
+          break;
 
-        token[3].setPosition(600 + offset, 603 + offset);
+        case 6:
+          token[0] = new Token();
 
-        offset = offset + 10;
+          token[0].setBounds(10, 10, 700, 700);
 
-        token[4] = new Token(Color.yellow);
+          token[0].setPosition(600, 603);
 
-        token[4].setBounds(10, 10, 700, 700);
+          token[1] = new Token(Color.red);
 
-        token[4].setPosition(600 + offset, 603 + offset);
+          token[1].setBounds(10, 10, 700, 700);
 
-        offset = offset + 10;
+          token[1].setPosition(600 + offset, 603 + offset);
 
-        token[5] = new Token(Color.cyan);
+          offset = offset + 10;
 
-        token[5].setBounds(10, 10, 700, 700);
+          token[2] = new Token(Color.blue);
 
-        token[5].setPosition(600 + offset, 603 + offset);
+          token[2].setBounds(10, 10, 700, 700);
 
-        break;
+          token[2].setPosition(600 + offset, 603 + offset);
 
-      default:
-        System.out.println("Invalid number of players");
+          offset = offset + 10;
+
+          token[3] = new Token(Color.green);
+
+          token[3].setBounds(10, 10, 700, 700);
+
+          token[3].setPosition(600 + offset, 603 + offset);
+
+          offset = offset + 10;
+
+          token[4] = new Token(Color.yellow);
+
+          token[4].setBounds(10, 10, 700, 700);
+
+          token[4].setPosition(600 + offset, 603 + offset);
+
+          offset = offset + 10;
+
+          token[5] = new Token(Color.cyan);
+
+          token[5].setBounds(10, 10, 700, 700);
+
+          token[5].setPosition(600 + offset, 603 + offset);
+
+          layeredPane.add(token[0], 1);
+          layeredPane.add(token[1], 2);
+          layeredPane.add(token[2], 3);
+          layeredPane.add(token[3], 4);
+          layeredPane.add(token[4], 5);
+          layeredPane.add(token[5], 6);
+
+          playerDetails();
+
+          break;
+
+        default:
+          JOptionPane.showMessageDialog(null, "Invalid number of players. Please try again.");
+      }
+
     }
 
     // The location of the image should be specified here
@@ -227,18 +280,14 @@ public class UI_Monopoly_Board extends JFrame {
         new JLabel(new ImageIcon(this.getClass().getResource("Monopoly_board.jpg")));
     monopolyImageLabel.setBounds(-50, -30, 800, 750);
     // The image and the tokens are added to the pane at different levels allowing them to overlap
-    layeredPane.add(monopolyImageLabel, new Integer(1));
-    layeredPane.add(token[0], new Integer(2));
-    layeredPane.add(token[1], new Integer(3));
-    layeredPane.add(token[2], new Integer(4));
-    layeredPane.add(token[3], new Integer(5));
-    layeredPane.add(token[4], new Integer(6));
-    layeredPane.add(token[5], new Integer(7));
+    layeredPane.add(monopolyImageLabel);
 
 
     setSize(1500, 750);
-    setExtendedState(JFrame.MAXIMIZED_BOTH); // Sets the default window for the JFrame as a
-                                             // maximised
+    setExtendedState(
+        JFrame.MAXIMIZED_BOTH); /*
+                                 * Sets the default window for the JFrame as a maximised
+                                 */
     this.setResizable(false);
     setTitle("Welcome to Monopoly");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ensures the JFrame operation ends completely
@@ -306,6 +355,25 @@ public class UI_Monopoly_Board extends JFrame {
                                                // being added to the layered pane
 
     layeredPane.add(commandPanel);
+  }
+
+  public void playerDetails() {
+    String playerNames;
+    int i;
+
+    for (i = 0; i < playerDetails.length; i++) {
+      playerNames = JOptionPane.showInputDialog("Please enter your names: ");
+
+      playerDetails[i] = new Players(playerNames, 1500);
+      
+      
+    }
+
+    for (i = 0; i < playerDetails.length; i++) {
+      textArea.append(
+          "Welcome! " + playerDetails[i].getDetails() + "hope you have an enjoyable time! \n");
+      
+    }
   }
 
   // Method which moves the tokens round the board one at a time
