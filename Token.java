@@ -1,11 +1,11 @@
-package sprint_One;
+
 
 import java.awt.*;
 import javax.swing.JComponent;
 
 /*Each token has variables for location, dimension and shape, there's a constructor that
  * allows the user to specify the colour of the shape
- * the necessary accessor and mutator functions are provided
+ * the necessary accessory and mutator functions are provided
  */
 public class Token extends JComponent{
 	/**
