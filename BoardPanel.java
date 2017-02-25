@@ -21,9 +21,9 @@ public class BoardPanel extends JFrame{
 	private InfoPanel infoPanel;
 	private CommandPanel commandPanel;
 	
-	 
 	
 	public BoardPanel(Token[] token){
+		
 		
 		
 		int offset = 10;
@@ -31,14 +31,13 @@ public class BoardPanel extends JFrame{
 		switch (token.length) {
 	      case 2:
 	        token[0] = new Token();
-	        token[0].setBounds(10, 10, 700, 700);
+	        
 
 	        token[0].setPosition(600, 603);
 
 	        token[1] = new Token(Color.red);
 
-	        token[1].setBounds(10, 10, 700, 700);
-
+	       
 	        token[1].setPosition(600 + offset, 603 + offset);
 	        
 	        layeredPane.add(token[0], new Integer(2));
@@ -49,22 +48,19 @@ public class BoardPanel extends JFrame{
 	      case 3:
 	        token[0] = new Token();
 
-	        token[0].setBounds(10, 10, 700, 700);
 
 	        token[0].setPosition(600, 603);
 
 	        token[1] = new Token(Color.red);
 
-	        token[1].setBounds(10, 10, 700, 700);
-
+	       
 	        token[1].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
 	        token[2] = new Token(Color.blue);
 
-	        token[2].setBounds(10, 10, 700, 700);
-
+	       
 	        token[2].setPosition(600 + offset, 603 + offset);
 	        
 	        layeredPane.add(token[0], new Integer(2));
@@ -77,30 +73,26 @@ public class BoardPanel extends JFrame{
 	      case 4:
 	        token[0] = new Token();
 
-	        token[0].setBounds(10, 10, 700, 700);
-
+	       
 	        token[0].setPosition(600, 603);
 
 	        token[1] = new Token(Color.red);
 
-	        token[1].setBounds(10, 10, 700, 700);
-
+	       
 	        token[1].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
 	        token[2] = new Token(Color.blue);
 
-	        token[2].setBounds(10, 10, 700, 700);
-
+	       
 	        token[2].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
 	        token[3] = new Token(Color.green);
 
-	        token[3].setBounds(10, 10, 700, 700);
-
+	     
 	        token[3].setPosition(600 + offset, 603 + offset);
 	        
 	        layeredPane.add(token[0], new Integer(2));
@@ -114,38 +106,33 @@ public class BoardPanel extends JFrame{
 	      case 5:
 	        token[0] = new Token();
 
-	        token[0].setBounds(10, 10, 700, 700);
-
+	      
 	        token[0].setPosition(600, 603);
 
 	        token[1] = new Token(Color.red);
 
-	        token[1].setBounds(10, 10, 700, 700);
-
+	       
 	        token[1].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
 	        token[2] = new Token(Color.blue);
 
-	        token[2].setBounds(10, 10, 700, 700);
-
+	        
 	        token[2].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
 	        token[3] = new Token(Color.green);
 
-	        token[3].setBounds(10, 10, 700, 700);
-
+	       
 	        token[3].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
 	        token[4] = new Token(Color.yellow);
 
-	        token[4].setBounds(10, 10, 700, 700);
-
+	       
 	        token[4].setPosition(600 + offset, 603 + offset);
 	        
 	        layeredPane.add(token[0], new Integer(2));
@@ -159,46 +146,40 @@ public class BoardPanel extends JFrame{
 	      case 6:
 	        token[0] = new Token();
 
-	        token[0].setBounds(10, 10, 700, 700);
-
+	      
 	        token[0].setPosition(600, 603);
 
 	        token[1] = new Token(Color.red);
 
-	        token[1].setBounds(10, 10, 700, 700);
-
+	        
 	        token[1].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
 	        token[2] = new Token(Color.blue);
 
-	        token[2].setBounds(10, 10, 700, 700);
-
+	       
 	        token[2].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
 	        token[3] = new Token(Color.green);
 
-	        token[3].setBounds(10, 10, 700, 700);
-
+	        
 	        token[3].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
 	        token[4] = new Token(Color.yellow);
 
-	        token[4].setBounds(10, 10, 700, 700);
-
+	        
 	        token[4].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
 	        token[5] = new Token(Color.cyan);
 
-	        token[5].setBounds(10, 10, 700, 700);
-
+	       
 	        token[5].setPosition(600 + offset, 603 + offset);
 	        
 	        layeredPane.add(token[0], new Integer(2));

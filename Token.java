@@ -21,6 +21,7 @@ public class Token extends JComponent{
 	public Token(){ 
 		super();
 		setVisible(true);
+		setBounds(10, 10, 700, 700);
 		this.length = 15;
 		this.breadth =15;
 		this.x = 5;

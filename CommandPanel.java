@@ -30,6 +30,7 @@ public class CommandPanel extends JPanel  {
 		           return;
 			   }
 		   }
+		
 		ActionListener listener = new AddActionListener();
 		commandField.addActionListener(listener);
 		commandField.setFont(new Font("Times New Roman", Font.PLAIN, FONT_SIZE));
