@@ -2,22 +2,19 @@
 
 
 
-public class Property {
+public class Property extends Square{
 	
 	private int value;
 	private final int rent = 25;
-	private String name;
 	private boolean owned;
-	private String type;
+	private Player owner;
 	
 	
-	
-	public Property(int value, String name, String type){
-		
+	public Property(int value, String name, int type){
+		super(name,type);
 		this.value = value;
-		this.name = name;
 		this.owned = false;
-		this.type = type;
+		this.owner = null;
 		
 	}
 	
@@ -30,17 +27,18 @@ public class Property {
 		return rent;
 	}
 	
-	
-	public String getName(){
-		return name;
+	public Player getOwner(){
+		return this.owner;
 	}
 	
+	public void setOwned(Player person){
+		this.owned = true;
+		this.owner = person;
+	}
 	
 	public boolean owned(){
 		return owned;
 	}
 	
-	public String getType(){
-		return type;
-	}
+
 }
