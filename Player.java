@@ -1,11 +1,12 @@
 import java.util.ArrayList;
 
+//This class is for the player and their characteristics
 public class Player {
 	
 	private String name;
 	private int balance;
 	private int position;
-	ArrayList<Property> assets;
+	ArrayList<Property> assets;//Stores the players assets
 	
 	public Player(String name){
 		this.name = name;
@@ -52,13 +53,13 @@ public class Player {
 		return summary;
 	}
 	
+	//Function for calculating player worth at the end of the game
 	public int getWorth(){
 		int i, worth = 0;
 		
 		for(i=0;i<assets.size();i++){
 			worth = worth + assets.get(i).getValue();
 		}
-		System.out.println(worth + this.balance);
 		return worth + this.balance;
 	}
 	
