@@ -1,4 +1,4 @@
-
+//This class is for the squares and their characteristics
 public class Square {
 	
 	private String name;
