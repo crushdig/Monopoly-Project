@@ -5,7 +5,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-
+/*
+ * This class deals mainly with setting up the Graphics of the board
+ */
 public class BoardPanel extends JFrame{
 	/**
 	 * 
@@ -27,7 +29,7 @@ public class BoardPanel extends JFrame{
 		
 		
 		int offset = 10;
-		
+		//The tokens are initialised and added to the board
 		switch (token.length) {
 	      case 2:
 	        token[0] = new Token();
@@ -225,12 +227,6 @@ public class BoardPanel extends JFrame{
 		return;
 	}
 	
-	
-	 public void refresh () {
-			revalidate();
-			repaint();
-			return;
-	    }
 	
 	 public InfoPanel getIpanel(){
 		 return this.infoPanel;
