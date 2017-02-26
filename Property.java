@@ -1,7 +1,5 @@
 
-
-
-
+//This class is for the properties and their characteristics, it inherits Square as a Property is a Square
 public class Property extends Square{
 	
 	private int value;
