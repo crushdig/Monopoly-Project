@@ -1,9 +1,11 @@
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Random;
+
 
 import javax.swing.JOptionPane;
-
+/*
+ * This class controls everything that has to do with the gameplay
+ */
 
 public class Monopoly {
 	private int players;
@@ -41,7 +43,7 @@ public class Monopoly {
 	public static final int TYPE_TAX = 9;
 
 	private static final String INSTRUCTIONS= "The commands are: 'roll' to roll \n 'help' for instructions \n "
-			+ "'pay rent' to pay rent \n 'buy' to buy \n 'property' to show properties \n 'balance' to show balance \n "
+			+ " 'pay rent' to pay rent \n 'buy' to buy \n 'property' to show properties \n 'balance' to show balance \n "
 			+ " 'done' to end turn \n  'quit' to finish early";
 	
 	
@@ -57,10 +59,11 @@ public class Monopoly {
 			TYPE_GOTO_JAIL, TYPE_SITE, TYPE_SITE, TYPE_COMMUNITY, TYPE_SITE,
 			TYPE_STATION, TYPE_CHANCE, TYPE_SITE, TYPE_TAX, TYPE_SITE };
 
+	//The Dice being used in the game
 	private final Dice[] die = new Dice[2] ;
 	
 	
-	private ArrayList<Player> player;
+	private ArrayList<Player> player;//All the players
 	private Board board;
 	boolean gameover = false;
 
@@ -85,15 +88,10 @@ public class Monopoly {
 		player = new ArrayList<Player>();
 
 		for(int i=0;i<this.players;i++){
-			name = JOptionPane.showInputDialog("Enter player name");
+			name = JOptionPane.showInputDialog("Enter player " + i + "'s" + " name");
 			player.add(new Player(name));
 		}
 
-		//		for (int i=0; i<player.size() ; i++) {
-		//
-		//			System.out.println(player.get(i).getName() +" has " + player.get(i).getPropertiesAndBalance());
-		//
-		//		}
 
 		board = new Board(player);
 
@@ -108,7 +106,7 @@ public class Monopoly {
 
 	}
 
-	
+	//Takes in the ArrayList of players and returns the person that goes first
 	public Player whoGoesFirst(ArrayList<Player> person){
 		
 		String command="";
@@ -143,7 +141,7 @@ public class Monopoly {
 		}
 		
 		ui.displayString(person.get(playerIndex).getName() + " goes first :)");
-		
+		//Returns the person with the highest roll
 		return person.get(playerIndex);
 	}
 
@@ -164,13 +162,15 @@ public class Monopoly {
 			}
 		}	
 		
+		
 		while(!gameover){
 			//j is the index of the person that starts
-			i=j;
+			int index_Of_Player_That_Starts=j;
 			
 			//Takes turns based on the player that starts
-			switch(i){
+			switch(index_Of_Player_That_Starts){
 			
+			//Turns are taken as normal if person 0 starts
 			case 0:
 				for(i=j;i<player.size();i++){
 					
@@ -178,13 +178,14 @@ public class Monopoly {
 					turn(player.get(i), i);
 				}
 				break;
-				
+			//If person 1 and above starts, turns are taken in ascending order then the person 0 takes their turn
 			case 1:
 				for(i=j;i<player.size();i++){
 					if(gameover) break;
 					turn(player.get(i), i);
 					
 				}
+				
 				for(int k=0;k<i;k++){
 					if(gameover) break;
 					turn(player.get(k), k);
@@ -236,11 +237,9 @@ public class Monopoly {
 			
 			
 			}
-//			for(i=j;i<player.size();i++){
-//				
-//				if(gameover) break;
-//				turn(player.get(i), i);
-//			}
+
+			
+			//Prints the winner if the game is over
 			if(gameover){
 			int max_assets = 0, playerIndex = 0;	
 				for(i=0;i<player.size();i++){
@@ -252,7 +251,7 @@ public class Monopoly {
 			
 				}
 				
-				ui.displayString(player.get(playerIndex).getName() + " Wins");
+				ui.displayString(player.get(playerIndex).getName() + " Wins! :)");
 				
 			}
 			
@@ -264,6 +263,7 @@ public class Monopoly {
 		return;
 	}
 
+	//Function contains all the actions a player can perform in their turn
 	public void turn(Player person, int person_number) throws InterruptedException{
 		String command="";
 		boolean rolled = false;
@@ -307,19 +307,15 @@ public class Monopoly {
 			if(command.equals("roll")) {
 				ui.displayString("Stop trying to be sly, you can't roll twice in one turn");
 			}
-			//Give 200 if you pass GO
-			if(board.squareType(person.getPosition()) == 0){
-				ui.displayString("You passed GO! Collect 200!");
-				person.getRent(200);
-			}
 			
+			//Ends the game if someone quits
 			if(command.equals("quit")) {
 				ui.displayString(person.getName() + " Quit :(");
 				this.gameover = true;
 				return;
 			}
 			
-			//Fix rent
+			//Checks if you're on a property that can be can require rent
 			if( (board.squareType(person.getPosition()) == 1) || (board.squareType(person.getPosition()) == 2) || (board.squareType(person.getPosition()) == 3) )
 			{
 				
@@ -345,9 +341,10 @@ public class Monopoly {
 			}
 			
 			if(command.equals("buy")){
+				//Checks if you're on a property that can be bought
 				if( (board.squareType(person.getPosition()) == 1) || (board.squareType(person.getPosition()) == 2) || (board.squareType(person.getPosition()) == 3) )
 				{
-					
+					//Checks if the property isn't owned
 					if(!board.getProperty(person.getPosition()).owned()){
 						person.buy(board.getProperty(person.getPosition()));
 						ui.displayString("You bought " + board.getProperty(person.getPosition()).getName());
@@ -377,6 +374,7 @@ public class Monopoly {
 				ui.displayString(person.getProperties());
 			}
 			
+			//Displays message for invalid commands
 			if(!(command.equals("property")) && !(command.equals("balance")) && !(command.equals("help")) && !(command.equals("pay rent"))
 					&& !(command.equals("quit")) && !(command.equals("done")) && !(command.equals("buy")) && !(command.equals("roll"))){
 				ui.displayString("Invalid command, type 'help' for help");
@@ -387,15 +385,6 @@ public class Monopoly {
 	}
 	
 	
-	public int roll(){
-
-		Random randomGenerator = new Random();
-		int randomInt = randomGenerator.nextInt(6 - 1 + 1) + 1;
-
-
-		return randomInt;
-	}
-
 
 	private void moveToken(int m, int person) throws InterruptedException {
 
@@ -483,12 +472,17 @@ public class Monopoly {
 			}
 				
 				person.move(position);
+				//Give 200 if you pass GO
+				if(board.squareType(person.getPosition()) == 0){
+					ui.displayString("You passed GO! Collect 200!");
+					person.getRent(200);
+				}
 		
 		}
 		ui.displayString(board.squareInfo(person.getPosition()));
 	}
 
-
+	//Launches the game
 	public static void main (String args[]) throws InterruptedException {	
 		Monopoly game = new Monopoly();		
 
