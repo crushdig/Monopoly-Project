@@ -1,4 +1,4 @@
-
+//This class is for the User Interface
 
 public class UI {
 	
