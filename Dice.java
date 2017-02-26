@@ -1,5 +1,7 @@
 import java.util.Random;
 
+//This class is for the Die
+
 public class Dice {
 
 	private int face;
