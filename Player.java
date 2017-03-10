@@ -1,3 +1,4 @@
+package sprint_Three;
 import java.util.ArrayList;
 
 //This class is for the player and their characteristics
@@ -43,11 +44,14 @@ public class Player {
         
         int i;
         
-        if(assets.size() == 0) return "You have no properties to your name. ";
+        if(assets.size() == 0) 
+        {
+          return "You have no properties to your name. ";
+        }
         
         String summary = "Your properties are:\n";
         
-        for(i=1;i<=assets.size();i++){
+        for(i = 0; i < assets.size();i++){
             summary = summary + assets.get(i).getName() + "\n";
         }
         return summary;
@@ -57,7 +61,7 @@ public class Player {
     public int getWorth(){
         int i, worth = 0;
         
-        for(i=1;i<=assets.size();i++){
+        for(i=0;i<assets.size();i++){
             worth = worth + assets.get(i).getValue();
         }
         return worth + this.balance;

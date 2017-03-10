@@ -1,3 +1,4 @@
+package sprint_Three;
 import java.awt.Point;
 import java.util.ArrayList;
 
@@ -87,10 +88,13 @@ public class Monopoly {
     String playerName;
 
     player = new ArrayList<Player>();
-
-    for (int i = 1; i <= this.players; i++) {
-      playerName = JOptionPane.showInputDialog("Player " + i + " please enter your name");
+    
+    int n = 1;
+    for (int i = 0; i < this.players; i++) {
+      
+      playerName = JOptionPane.showInputDialog("Player " + n + " please enter your name");
       player.add(new Player(playerName));
+      n++;
     }
 
 
