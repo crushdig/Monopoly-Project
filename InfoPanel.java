@@ -1,3 +1,4 @@
+package sprint_Three;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,16 +20,16 @@ public class InfoPanel extends JPanel{
 
     private Border blackLineBorder;
     private final int ROWS = 33;
-      private final int COLUMNS = 40;
-      private JTextArea textArea = new JTextArea(ROWS, COLUMNS);
+    private final int COLUMNS = 37;
+    private JTextArea textArea = new JTextArea(ROWS, COLUMNS);
     JScrollPane scrollPane = new JScrollPane(textArea);
     DefaultCaret caret = (DefaultCaret)textArea.getCaret();
     
-    InfoPanel () {
+    public InfoPanel () {
         
         blackLineBorder = BorderFactory.createLineBorder(Color.BLACK);
         TitledBorder title = BorderFactory.createTitledBorder(blackLineBorder, "Information Panel");
-
+        
         setBorder(title);
         textArea.setEditable(false);
         textArea.setFont(new Font("Times New Roman", Font.PLAIN, FONT_SIZE));

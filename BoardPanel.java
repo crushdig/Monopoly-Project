@@ -1,238 +1,75 @@
-import java.awt.Color;
-import java.awt.Dimension;
+package sprint_Three;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-/*
- * This class deals mainly with setting up the Graphics of the board
- */
-public class BoardPanel extends JFrame{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-    private static final int FRAME_WIDTH = 1500;
-    private static final int FRAME_HEIGHT = 750;
-     private JLayeredPane layeredPane = getLayeredPane(); // The use of a JLayeredPane allows easier
-                                                            // and more flexible specification of
-                                                            // component positions
-    private static JLabel monopolyImageLabel;
-    
-    private InfoPanel infoPanel;
-    private CommandPanel commandPanel;
-    
-    
-    public BoardPanel(Token[] token){
-        
-        
-        
-        int offset = 10;
-        //The tokens are initialised and added to the board
-        switch (token.length) {
-          case 2:
-            token[0] = new Token();
-            
+import java.io.File;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
+import java.awt.*;
+import java.awt.geom.*;
+import java.util.ArrayList;
 
-            token[0].setPosition(600, 603);
-
-            token[1] = new Token(Color.red);
-
-           
-            token[1].setPosition(600 + offset, 603 + offset);
-            
-            layeredPane.add(token[0], new Integer(2));
-            layeredPane.add(token[1], new Integer(3));
-
-            break;
-
-          case 3:
-            token[0] = new Token();
-
-
-            token[0].setPosition(600, 603);
-
-            token[1] = new Token(Color.red);
-
-           
-            token[1].setPosition(600 + offset, 603 + offset);
-
-            offset = offset + 10;
-
-            token[2] = new Token(Color.blue);
-
-           
-            token[2].setPosition(600 + offset, 603 + offset);
-            
-            layeredPane.add(token[0], new Integer(2));
-            layeredPane.add(token[1], new Integer(3));
-            layeredPane.add(token[2], new Integer(4));
-            
-
-            break;
-
-          case 4:
-            token[0] = new Token();
-
-           
-            token[0].setPosition(600, 603);
-
-            token[1] = new Token(Color.red);
-
-           
-            token[1].setPosition(600 + offset, 603 + offset);
-
-            offset = offset + 10;
-
-            token[2] = new Token(Color.blue);
-
-           
-            token[2].setPosition(600 + offset, 603 + offset);
-
-            offset = offset + 10;
-
-            token[3] = new Token(Color.green);
-
-         
-            token[3].setPosition(600 + offset, 603 + offset);
-            
-            layeredPane.add(token[0], new Integer(2));
-            layeredPane.add(token[1], new Integer(3));
-            layeredPane.add(token[2], new Integer(4));
-            layeredPane.add(token[3], new Integer(5));
-            
-            
-            break;
-
-          case 5:
-            token[0] = new Token();
-
-          
-            token[0].setPosition(600, 603);
-
-            token[1] = new Token(Color.red);
-
-           
-            token[1].setPosition(600 + offset, 603 + offset);
-
-            offset = offset + 10;
-
-            token[2] = new Token(Color.blue);
-
-            
-            token[2].setPosition(600 + offset, 603 + offset);
-
-            offset = offset + 10;
-
-            token[3] = new Token(Color.green);
-
-           
-            token[3].setPosition(600 + offset, 603 + offset);
-
-            offset = offset + 10;
-
-            token[4] = new Token(Color.yellow);
-
-           
-            token[4].setPosition(600 + offset, 603 + offset);
-            
-            layeredPane.add(token[0], new Integer(2));
-            layeredPane.add(token[1], new Integer(3));
-            layeredPane.add(token[2], new Integer(4));
-            layeredPane.add(token[3], new Integer(5));
-            layeredPane.add(token[4], new Integer(6));
-
-            break;
-
-          case 6:
-            token[0] = new Token();
-
-          
-            token[0].setPosition(600, 603);
-
-            token[1] = new Token(Color.red);
-
-            
-            token[1].setPosition(600 + offset, 603 + offset);
-
-            offset = offset + 10;
-
-            token[2] = new Token(Color.blue);
-
-           
-            token[2].setPosition(600 + offset, 603 + offset);
-
-            offset = offset + 10;
-
-            token[3] = new Token(Color.green);
-
-            
-            token[3].setPosition(600 + offset, 603 + offset);
-
-            offset = offset + 10;
-
-            token[4] = new Token(Color.yellow);
-
-            
-            token[4].setPosition(600 + offset, 603 + offset);
-
-            offset = offset + 10;
-
-            token[5] = new Token(Color.cyan);
-
-           
-            token[5].setPosition(600 + offset, 603 + offset);
-            
-            layeredPane.add(token[0], new Integer(2));
-            layeredPane.add(token[1], new Integer(3));
-            layeredPane.add(token[2], new Integer(4));
-            layeredPane.add(token[3], new Integer(5));
-            layeredPane.add(token[4], new Integer(6));
-            layeredPane.add(token[5], new Integer(7));
-
-            break;
-
-          default:
-            System.out.println("Invalid number of players");
+class BoardPanel extends JPanel {
+	
+	private static final long serialVersionUID = 1L;
+	private static final int FRAME_WIDTH = 750;    // must be even
+	private static final int FRAME_HEIGHT = 750;
+	private static final int TOKEN_RADIUS = 8;   // must be even
+	private static final Color[] PLAYER_COLORS = {Color.RED,Color.BLUE,Color.YELLOW,Color.GREEN,Color.MAGENTA,Color.WHITE};
+	private static final String[] TOKEN_NAME = {"red","blue","yellow","green","magenta","white"};
+	private static final float[] PLAYER_OFFSET = {0, 0.01f, 0.02f, 0.03f, 0.04f, 0.05f};
+	private static final float[][] CORNER_FROM = { {710, 730}, {5, 700}, {40,5}, {730, 40},};
+	private static final float[][] CORNER_TO = {{60, 730}, {5, 70}, {700,5}, {730, 700}};
+	
+	private ArrayList<Player> players;	
+	private BufferedImage boardImage;
+	private int[][][] squareCoords = new int [Board.NUM_SQUARES][Monopoly.MAX_NUM_PLAYERS][2];
+	
+	BoardPanel (ArrayList<Player> players) {
+		this.players = players;
+		setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		setBackground(Color.WHITE);
+		try {
+			boardImage = ImageIO.read(new File("Monopoly_board.jpg"));
+		} catch (IOException ex) {
+			System.out.println("Could not find the image file " + ex.toString());
+		}
+		int sideLength = Board.NUM_SQUARES/4;
+ 		for (int s=0; s<Board.NUM_SQUARES; s++) {
+			for (int p=0; p<Monopoly.MAX_NUM_PLAYERS; p++) {
+		        	int side = (int) s / sideLength;
+		        	float offset = (float) (s % sideLength) / sideLength + PLAYER_OFFSET[p];
+		        	squareCoords[s][p][0] = Math.round(CORNER_FROM[side][0] + offset * (CORNER_TO[side][0] - CORNER_FROM[side][0]));
+		        	squareCoords[s][p][1] = Math.round(CORNER_FROM[side][1] + offset * (CORNER_TO[side][1] - CORNER_FROM[side][1]));
+			}
+		}
+		return;
+	}
+	
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(boardImage, 0, 0, FRAME_WIDTH, FRAME_HEIGHT, this);
+        for (int p=0; p<players.size(); p++) {
+	        int square = players.get(p).getPosition();
+	        g2.setColor(Color.BLACK);
+            Ellipse2D.Double outline = new Ellipse2D.Double(squareCoords[square][p][0],squareCoords[square][p][1],2*TOKEN_RADIUS,2*TOKEN_RADIUS);
+            g2.fill(outline);
+            Ellipse2D.Double ellipse = new Ellipse2D.Double(squareCoords[square][p][0]+1,squareCoords[square][p][1]+1,2*TOKEN_RADIUS-2,2*TOKEN_RADIUS-2);
+            g2.setColor(PLAYER_COLORS[p]);
+            g2.fill(ellipse);
         }
-        
-        commandPanel = new CommandPanel();
-        infoPanel = new InfoPanel();
-        
-        
-        monopolyImageLabel =
-                new JLabel(new ImageIcon(this.getClass().getResource("Monopoly_board.jpg")));
-        monopolyImageLabel.setBounds(-50, -30, 800, 750);
-        
-        
-        // The image and the tokens are added to the pane at different levels allowing them to overlap
-        layeredPane.add(monopolyImageLabel, new Integer(1));
-       
-       
-        layeredPane.add(commandPanel);
-        layeredPane.add(infoPanel);
-        
-        setSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Sets the default window for the JFrame as a
-        // maximised
-        setBackground(Color.BLACK);
-        
-         this.setResizable(false);
-            setTitle("Welcome to Monopoly");
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ensures the JFrame operation ends completely
-                                                            // upon exiting the window
-            setVisible(true);
-        
-        return;
+		return;
     }
     
+    public void refresh () {
+		revalidate();
+		repaint();
+		return;
+    }
     
-     public InfoPanel getIpanel(){
-         return this.infoPanel;
-     }
-     
-     public CommandPanel getCpanel(){
-         return this.commandPanel;
-     }
+    public String getTokenName (int tokenId) {
+    	return TOKEN_NAME[tokenId];
+    }
+    
 }

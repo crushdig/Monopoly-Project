@@ -1,3 +1,4 @@
+package sprint_Three;
 
 //This class is for the Tokens and their characteristics
 import java.awt.*;

@@ -1,79 +1,116 @@
 package sprint_Three;
 import java.util.ArrayList;
 
-//This class is for the player and their characteristics
 public class Player {
-    
-    private String name;
-    private int balance;
-    private int position;
-    ArrayList<Property> assets;//Stores the players assets
-    
-    public Player(String name){
-        this.name = name;
-        this.balance = 1500;
-        this.position = 0;
-        this.assets = new ArrayList<Property>();
-    }
+	
+	private String name;
+	private int position;
+	private int balance;
+	private int amount;
+	private String token;
+	private boolean passedGo;
+	private ArrayList<Property> properties = new ArrayList<Property>();
+	private static final String[] COLOUR_GROUP_NAME = {"brown","light blue", 
+	    "pink", "orange", "red", "yellow", "green", "dark blue"};
+	private static final int[] NUM_IN_GROUP = {2,3,3,3,3,3,3,2};
+	
+	Player (String name, String token) {
+		this.name = name;
+		this.token = token;
+		position = 0;
+		balance = 0;
+		passedGo = false;
+	}
+	
+	public void move (int squares) {
+		position = position + squares;
+		if (position >= Board.NUM_SQUARES) {
+			position = position - Board.NUM_SQUARES;
+			passedGo = true;
+		} else {
+			passedGo = false;
+		}
+		if (position < 0) {
+			position = position + Board.NUM_SQUARES;
+		} 
+	}
+	
+	public boolean Monopoly(String colour)
+	{
+	  int count_The_Colour_Of_Each_Property = 0, i;
+	  
+	  for(i = 0; i < properties.size(); i++)
+	  {
+	    if(properties.get(i).getColour() == colour)
+	    {
+	      count_The_Colour_Of_Each_Property++;
+	    }
+	  }
+	  
+	  for(i = 0; i < COLOUR_GROUP_NAME.length; i++)
+	  {
+	    if(COLOUR_GROUP_NAME[i] == colour)
+	    {
+	      break;
+	    }
+	  }
+	  
+	  if(count_The_Colour_Of_Each_Property == NUM_IN_GROUP[i])
+	  { 
+	    return true;
+	  }
+	  
+	  return false;
+	}
 
-    public String getName(){
-        return this.name;
-    }
-    
-    public void buy(Property property){
-        balance = balance - property.getValue();
-        assets.add(property);
-        property.setOwned(this);
-    }
-    
-    public void getRent(int rent){
-        balance = balance + rent;
-    }
-    
-    public int payRent(int rent){
-        balance = balance - rent;
-        return rent;
-    }
-    
-    
-    public String getBalance(){
-        return "Your Balance is\t" + this.balance;
-    }
-    
-    public String getProperties(){
-        
-        int i;
-        
-        if(assets.size() == 0) 
-        {
-          return "You have no properties to your name. ";
-        }
-        
-        String summary = "Your properties are:\n";
-        
-        for(i = 0; i < assets.size();i++){
-            summary = summary + assets.get(i).getName() + "\n";
-        }
-        return summary;
-    }
-    
-    //Function for calculating player worth at the end of the game
-    public int getWorth(){
-        int i, worth = 0;
-        
-        for(i=0;i<assets.size();i++){
-            worth = worth + assets.get(i).getValue();
-        }
-        return worth + this.balance;
-    }
-    
-    public void move(int position){
-        this.position = position;
-    }
-    
-    public int getPosition(){
-        return position;
-    }
-    
-
+	public void doTransaction (int amount) {
+		balance = balance + amount;
+		this.amount = amount;
+	}
+	
+	public int getPosition () {
+		return position;
+	}
+	
+	public String getName () {
+		return name;
+	}
+	
+	public int getTransaction () {
+		return amount;
+	}
+	
+	public int getBalance () {
+		return balance;
+	}
+	
+	public boolean passedGo () {
+		return passedGo;
+	}
+	
+	public void boughtProperty (Property property) {
+		property.setOwner(this);
+		properties.add(property);
+		return;
+	}
+	
+	public Property getLatestProperty () {
+		return properties.get(properties.size()-1);
+	}
+	
+	public ArrayList<Property> getProperties () {
+		return properties;
+	}
+	
+	public int getAssets () {
+		int assets = balance;
+		for (Property property: properties) {
+			assets = assets + property.getValue();
+		}
+		return assets;
+	}
+	
+	public String toString () {
+		return name + " (" + token + ")";
+	}
 }

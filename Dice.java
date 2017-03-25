@@ -1,19 +1,32 @@
-
-
-import java.util.Random;
+package sprint_Three;
 
 public class Dice {
+	
+	private static final int NUM_DICE = 2;
+	
+	private int[] dice = new int [NUM_DICE];
+	
+	public void roll () {
+		for (int i=0; i<NUM_DICE; i++) {
+			dice[i] = 1 + (int)(Math.random() * 6);   
+		}
+		return;
+	}
 
-    private int face;
-    
-    public Dice(){
-        this.face = 1;
-    }
-    
-    public int roll(){
-        Random Generate = new Random();
-        this.face = Generate.nextInt(6 - 1 + 1) + 1;
-        return this.face;
-    }
-    
+	public int[] getDice () {
+		return dice;
+	}
+	
+	public int getTotal () {
+		return (dice[0] + dice[1]);
+	}
+	
+	public boolean isDouble () {
+		return dice[0] == dice[1];
+	}
+	
+	public String toString () {
+		return dice[0] + " " + dice[1];
+	}
+	
 }

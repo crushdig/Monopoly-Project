@@ -1,144 +1,66 @@
-import java.util.ArrayList;
+package sprint_Three;
 
-//This class deals with setting up the board with required Squares
 public class Board {
-    
-    
-    public static final int NUM_SQUARES = 40;
-    public static final int TYPE_GO = 0;
-    public static final int TYPE_SITE = 1;
-    public static final int TYPE_STATION = 2;
-    public static final int TYPE_UTILITY = 3;
-    public static final int TYPE_COMMUNITY = 4;
-    public static final int TYPE_CHANCE = 5;
-    public static final int TYPE_JAIL = 6;
-    public static final int TYPE_PARKING = 7;
-    public static final int TYPE_GOTO_JAIL = 8;
-    public static final int TYPE_TAX = 9;
-    
-    private static final int[] SQUARE_TYPES = {
-    TYPE_GO, TYPE_SITE, TYPE_COMMUNITY, TYPE_SITE, TYPE_TAX, TYPE_STATION,
-    TYPE_SITE, TYPE_CHANCE, TYPE_SITE, TYPE_SITE,
-    TYPE_JAIL, TYPE_SITE, TYPE_UTILITY, TYPE_SITE, TYPE_SITE, TYPE_STATION,
-    TYPE_SITE, TYPE_COMMUNITY, TYPE_SITE, TYPE_SITE,
-    TYPE_PARKING, TYPE_SITE, TYPE_CHANCE, TYPE_SITE, TYPE_SITE,
-    TYPE_STATION, TYPE_SITE, TYPE_SITE, TYPE_UTILITY, TYPE_SITE,
-    TYPE_GOTO_JAIL, TYPE_SITE, TYPE_SITE, TYPE_COMMUNITY, TYPE_SITE,
-    TYPE_STATION, TYPE_CHANCE, TYPE_SITE, TYPE_TAX, TYPE_SITE};
-    
-    private static final String GO_NAME = "GO";
-    
-     
-     private ArrayList<Square> squares;
-     
-    
-      
-      private static final String[] SITE_NAMES = {
-              "Old Kent Rd","Whitechapel Rd","The Angel Islington","Euston Rd","Pentonville Rd",
-              "Pall Mall","Whitehall","Northumberland Ave","Bow St","MarlboroughSt","Vine St",
-              "Strand","Fleet St","Trafalgar Sq","Leicester Sq","CoventrySt","Piccadilly",
-              "Regent St","Oxford St","Bond St","Park Lane","Mayfair"};
-      
-      private static final int[] SITE_PRICES = {
-              60,60,100,100,120,
-              140,140,160,180,180,200,
-              220,220,240,260,260,280,
-              300,300,320,350,400};
-          
-            
-      private static final String COMMUNITY_NAME = "Community Chest";
-      private static final String CHANCE_NAME = "Chance";
-      private static final String JAIL_NAME = "Jail (Just Visiting)";
-      private static final String PARKING_NAME = "Free Parking";
-      private static final String GOTO_JAIL_NAME = "Go To Jail";
-              
-                          
-              private static final String[] STATION_NAMES = {
-              "King's Cross Station",
-              "Marylebone Station",
-              "Fenchurch St Station",
-              "Liverpool St Station"};
-             
-              
-              private static final int STATION_PRICE = 200;
-              
-              private static final String[] UTILITY_NAMES = {"Electric Co","Water Works"};
-
-              private static final int UTILITY_PRICE = 150;
-    
-    public Board(ArrayList<Player> players){
-        
-        squares = new ArrayList<Square>();  
-         int i;
-         int a=0,b=0,c =0;
-          //Initialising the squares
-         
-         for(i=0; i<SQUARE_TYPES.length ; i++){
-                 
-             switch(SQUARE_TYPES[i]){
-            case 0:
-                squares.add(new Square(GO_NAME, SQUARE_TYPES[i]));
-                break;
-            case 1:
-                squares.add(new Property(SITE_PRICES[a], SITE_NAMES[a], SQUARE_TYPES[i]));
-                a++;
-                break;
-            case 2:
-                squares.add(new Property(STATION_PRICE, STATION_NAMES[b], SQUARE_TYPES[i]));
-                b++;
-                break;
-            case 3:
-                squares.add(new Property(UTILITY_PRICE, UTILITY_NAMES[c], SQUARE_TYPES[i]));
-                c++;
-                break;
-            case 4:
-                squares.add(new Square(COMMUNITY_NAME, SQUARE_TYPES[i]));
-                break;
-            case 5:
-                squares.add(new Square(CHANCE_NAME, SQUARE_TYPES[i]));
-                break;
-            case 6:
-                squares.add(new Square(JAIL_NAME, SQUARE_TYPES[i]));
-                break;
-            case 7:
-                squares.add(new Square(PARKING_NAME, SQUARE_TYPES[i]));
-                break;
-            case 8:
-                squares.add(new Square(GOTO_JAIL_NAME, SQUARE_TYPES[i]));
-                break;
-            case 9:
-                squares.add(new Square("Tax", SQUARE_TYPES[i]));
-                break;   
-             
-             }
-                    
-         }
-                 
-    }
-    
-    //Returns information about a square
-    public String squareInfo(int position){
-         
-        if( (squares.get(position).getType() == 1) || (squares.get(position).getType() == 2) || squares.get(position).getType() == 3)
-        {
-            return squares.get(position).getName() + " " + ((Property) squares.get(position)).getValue();
-        }
-        
-        else return squares.get(position).getName() ;
-        
-    }
-    
-    //Returns the type of the square
-    public int squareType(int position){
-        return squares.get(position).getType();
-    }
-    
-    //Returns the property on the square at this position
-    public Property getProperty(int position){
-                
-        return (Property) squares.get(position);
-    }
-    
+	
+	// Board data from http://monopoly.wikia.com/wiki/Monopoly
+	// Note, a property is a site, utility or station
+	
+	public static final int NUM_SQUARES = 40;
+		
+	private Square[] squares = new Square[NUM_SQUARES];
+	
+	Board () {
+		squares[0] = new Square("Go");
+		squares[1] = new Property("Old Kent Rd", 60, new int[] {2,10,30,90,160,250}, "Brown");
+		squares[2] = new Square("Comminity Chest");
+		squares[3] = new Property("Whitechapel Rd", 60, new int[] {4,20,60,180,320,450}, "Brown");
+		squares[4]  = new Square("Income Tax");
+		squares[5] = new Property("King's Cross Station", 200, new int[] {25,50,100,200,200,200}, null);
+		squares[6] = new Property("The Angel Islington", 100, new int[] {6,30,90,270,400,550}, "Light blue");
+		squares[7] = new Square("Chance");
+		squares[8] = new Property("Euston Rd", 100, new int[] {6,30,90,270,400,550}, "Light blue");
+		squares[9] = new Property("Pentonville Rd", 120, new int[] {8,40,100,300,450,600}, "Light blue");
+		squares[10] = new Square("Jail");
+		squares[11] = new Property("Pall Mall", 140, new int[] {10,50,150,450,625,750}, "Indigo");
+		squares[12] = new Property("Electric Co", 150, new int[] {4,10,0,0,0,0}, null);
+		squares[13] = new Property("Whitehall", 140, new int[] {10,50,150,450,625,750}, "Indigo");
+		squares[14] = new Property("Northumberland Ave", 160, new int[] {12,60,180,500,700,900}, "Indigo");
+		squares[15] = new Property("Marylebone Station", 200, new int[] {25,50,100,200,200,200}, null);
+		squares[16] = new Property("Bow St", 180, new int[] {14,70,200,550,750,950}, "Orange");
+		squares[17] = new Square("Community Chest");
+		squares[18] = new Property("Marlborough St", 180, new int[] {14,70,200,550,750,950}, "Orange");
+		squares[19] = new Property("Vine St", 200, new int[] {16,80,220,600,800,1000}, "Orange");
+		squares[20] = new Square("Free Parking");
+		squares[21] = new Property("Strand", 220, new int[] {18,90,250,700,875,1050}, "Red");
+		squares[22] = new Square("Chance");
+		squares[23] = new Property("Fleet St", 220, new int[] {18,90,250,700,875,1050}, "Red");
+		squares[24]  = new Property("Trafalgar Sq", 240, new int[] {20,100,300,750,925,1100}, "Red");
+		squares[25] = new Property("Fenchurch St Station", 200, new int[] {25,50,100,200,200,200}, null);
+		squares[26] = new Property("Leicester Sq", 260, new int[] {22,110,330,800,975,1150}, "Yellow");
+		squares[27] = new Property("Coventry St", 260, new int[] {22,110,330,800,975,1150}, "Yellow");
+		squares[28] = new Property("Water Works", 150, new int[] {4,10,0,0,0,0}, null);
+		squares[29] = new Property("Piccadilly", 280, new int[] {22,120,360,850,1025,1200}, "Yellow");
+		squares[30] = new Square("Go To Jail");
+		squares[31] = new Property("Regent St", 300, new int[] {26,130,390,900,1100,1275}, "Green");
+		squares[32] = new Property("Oxford St", 300, new int[] {26,130,390,900,1100,1275}, "Green");
+		squares[33] = new Square("Community Chest");
+		squares[34] = new Property("Bond St", 320, new int[] {28,150,450,1000,1200,1400}, "Green");
+		squares[35] = new Property("Liverpool St Station", 200, new int[] {25,50,100,200,200,200}, null);
+		squares[36] = new Square("Chance");
+		squares[37] = new Property("Park Lane", 350, new int[] {35,175,500,1100,1300,1500}, "Blue");
+		squares[38] = new Square("Super Tax");
+		squares[39 ] = new Property("Mayfair", 400, new int[] {50,200,600,1400,1700,2000}, "Blue");
+	}
+	
+	public Square getSquare (int index) {
+		return squares[index];
+	}
+	
+	public Property getProperty (int index) {
+		return (Property) squares[index];
+	}
+	
+	public boolean isProperty (int index) {
+		return squares[index] instanceof Property;
+	}
 }
-
- 

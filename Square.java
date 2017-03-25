@@ -1,22 +1,19 @@
-//This class is for the squares and their characteristics
+package sprint_Three;
+
 public class Square {
-    
-    private String name;
-    private int type;
-    
-    public Square(String name, int type){
-        this.name = name;
-        this.type = type;
-    }
-    
-    
-    public int getType(){
-        return type;
-    }
-    
-    public String getName(){
-        return name;
-    }
-    
-    
+
+	private String name;
+	
+	Square (String name) {
+		this.name = name;
+		return;
+	}
+	
+	public String getName () {
+		return name;
+	}
+	
+	public String toString () {
+		return name;
+	}
 }

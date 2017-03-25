@@ -1,3 +1,4 @@
+package sprint_Three;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -15,6 +16,7 @@ public class CommandPanel extends JPanel  {
     
     private static final long serialVersionUID = 1L;
     private static final int FONT_SIZE = 14;
+    String command;
     
     private JTextField commandField = new JTextField(); 
     private LinkedList<String> commandBuffer = new LinkedList<String>();
@@ -52,7 +54,6 @@ public class CommandPanel extends JPanel  {
     
     
     public String getCommand() {
-        String command;
         synchronized (commandBuffer) {
             while (commandBuffer.isEmpty()) {
                 try {
@@ -63,7 +64,13 @@ public class CommandPanel extends JPanel  {
             }
             command = commandBuffer.pop();
         }
+        
         return command;
     }
+    
+//    public String getString()
+//    {
+//      return command;
+//    }
      
 }
