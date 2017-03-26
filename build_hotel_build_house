@@ -1,0 +1,110 @@
+ if(command.equalsIgnoreCase("Build House"))
+            {
+              ui.displayString("Enter the name of the property you want to build a house on");
+              
+              boolean found = false;
+              
+              String nameOfProperty = ui.getCommand();
+              ui.displayString(nameOfProperty);
+              
+              int i = 0;
+              int j;
+              
+              while(!found && i < PROPERTY_NAMES.length)
+              {
+                if(nameOfProperty.equalsIgnoreCase(PROPERTY_NAMES[i]))
+                {
+                  found = true;
+                }
+              }
+              i++;
+              
+              if(found)
+              {
+                boolean ownerOfProperty = false;
+                for(j = 0; j < person.assets.size() && !ownerOfProperty; j++)
+                {
+                  if(nameOfProperty.equalsIgnoreCase(person.assets.get(j).getName()))
+                  {
+                    ownerOfProperty = true;
+                    break;
+                  }
+                }
+                
+                if(ownerOfProperty)
+                {
+                  Site property = (Site) person.assets.get(j);
+                  if(person.Monopoly(property.getColour()))
+                  {
+                    int numOfHousesToBuild = 0;
+                    do{
+                      ui.displayString("Please specify the number of houses you want to build");
+                      String housesToBuild = ui.getCommand();
+                      ui.displayString(housesToBuild);
+                      
+                    }while(numOfHousesToBuild < 1 || numOfHousesToBuild > 4);
+                    
+                    property.buildHouse(numOfHousesToBuild);
+                    
+                    ui.displayString("Your " + numOfHousesToBuild + " houses have been built.");
+                  }
+                }
+              } 
+            }
+            
+            if(command.equalsIgnoreCase("Build Hotel"))
+            {
+              int i = 0;
+              Site property = (Site) person.assets.get(i);
+              if(property.getHouses() == 4)
+              {
+                ui.displayString("Enter the name of the property you want to build a hotel on");
+                
+                boolean found = false;
+                
+                String nameOfProperty = ui.getCommand();
+                ui.displayString(nameOfProperty);
+                
+                int j;
+                
+                while(!found && i < PROPERTY_NAMES.length)
+                {
+                  if(nameOfProperty.equalsIgnoreCase(PROPERTY_NAMES[i]))
+                  {
+                    found = true;
+                  }
+                }
+                i++;
+                
+                if(found)
+                {
+                  boolean ownerOfProperty = false;
+                  for(j = 0; j < person.assets.size() && !ownerOfProperty; j++)
+                  {
+                    if(nameOfProperty.equalsIgnoreCase(person.assets.get(j).getName()))
+                    {
+                      ownerOfProperty = true;
+                      break;
+                    }
+                  }
+                  
+                  if(ownerOfProperty)
+                  {
+                    if(person.Monopoly(property.getColour()))
+                    {
+                      int numOfHotelsToBuild = 0;
+                      do{
+                        ui.displayString("Please specify the number of houses you want to build");
+                        String housesToBuild = ui.getCommand();
+                        ui.displayString(housesToBuild);
+                        
+                      }while(numOfHotelsToBuild < 1 || numOfHotelsToBuild > 2);
+                      
+                      property.buildHouse(numOfHotelsToBuild);
+                      
+                      ui.displayString("Your " + numOfHotelsToBuild + " houses have been built.");
+                    }
+                  }
+                }
+              }
+            }
