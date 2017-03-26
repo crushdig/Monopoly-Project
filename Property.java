@@ -1,44 +1,73 @@
-package sprint_Three;
 
-public class Property extends Square {
-
-	private boolean isOwned;
-	private int value;
-	private int rent[];
-	private Player owner;
-	private String colour;
+//This class is for the properties and their characteristics, it inherits Square as a Property is a Square
+public class Property extends Square{
 	
-	Property (String name, int value, int[] rent, String colour) {
-		super(name);
+	private int value;
+	protected int[] rent;
+	private boolean owned;
+	private Player owner;
+	protected boolean mortgaged;
+	protected int mortgage_value;
+	
+	
+	public Property(int value, String name, int type, int[] rent, int mortgage_value){
+		super(name,type);
 		this.value = value;
+		this.owned = false;
+		this.mortgaged = false;
+		this.mortgage_value = mortgage_value;
+		this.owner = null;
 		this.rent = rent;
-		this.colour = colour;
-		isOwned = false;
+		
+		
 	}
 	
-	public int getValue () {
+	
+	public int getValue(){
 		return value;
 	}
 	
-	public int getRent () {
+	public int getRent(){
 		return rent[0];
 	}
 	
-	public boolean isOwned () {
-		return isOwned;
+	public Player getOwner(){
+		return this.owner;
 	}
 	
-	public void setOwner (Player Player) {
-		owner = Player;
-		isOwned = true;
+	public void setOwned(Player person){
+		this.owned = true;
+		this.owner = person;
+	}
+	
+	public boolean owned(){
+		return owned;
+	}
+	
+	public boolean isMortgaged(){
+		return mortgaged;
+	}
+	
+	public void mortgage(){
+	mortgaged = true;
+	}
+	
+	public void redeem(){
+		mortgaged = false;
+	}
+	
+	public int getMortgageValue(){
+		return this.mortgage_value;
 	}
 	
 	public String getColour()
 	{
-	  return colour;
+	  return null;
 	}
 	
-	public Player getOwner () {
-		return owner;
+	public String toString () {
+		return this.getName() + " " + this.getRent();
 	}
+	
+
 }
