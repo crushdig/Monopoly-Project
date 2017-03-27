@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Player {
 	
 	private String name;
-	private int balance;
+	private double balance;
 	private int position;
 	ArrayList<Property> assets;//Stores the players assets
 	private static final String[] COLOUR_GROUP_NAME = {"brown","light blue", 
@@ -29,8 +29,8 @@ public class Player {
 		property.setOwned(this);
 	}
 	
-	public void getRent(int rent){
-		balance = balance + rent;
+	public void getRent(double d){
+		balance = balance + d;
 	}
 	
 	public int payRent(int rent){
@@ -41,6 +41,10 @@ public class Player {
 	
 	public String getBalance(){
 		return "Balance is\t" + this.balance;
+	}
+	
+	public double getbalance(){
+		return this.balance;
 	}
 	
 	public String getProperties(){
@@ -58,7 +62,7 @@ public class Player {
 	}
 	
 	//Function for calculating player worth at the end of the game
-	public int getWorth(){
+	public double getWorth(){
 		int i, worth = 0;
 		
 		for(i=0;i<assets.size();i++){

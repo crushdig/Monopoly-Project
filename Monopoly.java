@@ -78,7 +78,7 @@ public class Monopoly {
 	private Board board;
 	boolean gameover = false;
 
-
+	//The constructor initializes the dice, players and board
 	Monopoly () {
 
 		for(int i=0;i<die.length;i++){
@@ -165,6 +165,7 @@ public class Monopoly {
 		return currPlayer;
 	}
 
+	//
 	private void gameplay() throws InterruptedException{
 
 
@@ -261,7 +262,8 @@ public class Monopoly {
 
 			//Prints the winner if the game is over
 			if(gameover){
-				int max_assets = 0, playerIndex = 0;	
+				double max_assets = 0;
+				int playerIndex = 0;	
 				for(i=0;i<player.size();i++){
 					ui.displayString(player.get(i).getName() + " is worth " + player.get(i).getWorth());
 					if(player.get(i).getWorth()>max_assets){
@@ -340,30 +342,7 @@ public class Monopoly {
 				return;
 			}
 
-			//			//Checks if you're on a property that can be can require rent
-			//			if( (board.squareType(person.getPosition()) == 1) || (board.squareType(person.getPosition()) == 2) || (board.squareType(person.getPosition()) == 3) )
-			//			{
-			//				
-			//				//Checks if the property is owned and the owner isn't this person
-			//				if(board.getProperty(person.getPosition()).owned()  && (board.getProperty(person.getPosition()).getOwner() != person)){
-			//					
-			//					
-			//					do{
-			//					ui.displayString("You have to pay rent, please type pay rent\n");
-			//					
-			//					if(command.equals("pay rent")){
-			//						//Get the owner and pay the rent to the owner
-			//						board.getProperty(person.getPosition()).getOwner().getRent(person.payRent(board.getProperty(person.getPosition()).getRent()));
-			//						
-			//						ui.displayString(person.getName() + " paid rent to " + board.getProperty(person.getPosition()).getOwner().getName());
-			//					}
-			//					
-			//					paid = true;
-			//					}while(!paid);
-			//					
-			//				
-			//				}
-			//			}
+		
 			if( (board.squareType(person.getPosition()) == 1) || (board.squareType(person.getPosition()) == 2) || (board.squareType(person.getPosition()) == 3) )
 			{
 				Property property = board.getProperty(person.getPosition());
@@ -386,7 +365,7 @@ public class Monopoly {
 						if(!property.isMortgaged()){
 							if (!property.getOwner().equals(person)) {
 								if (!paid) {
-									//							if (currPlayer.getBalance()>=property.getRent()) {
+																if (person.getbalance() >= property.getRent(property.getOwner())) {
 									switch(board.squareType(person.getPosition())){
 									case 1:
 										board.getProperty(person.getPosition()).getOwner().getRent(person.payRent(board.getProperty(person.getPosition()).getRent(board.getProperty(person.getPosition()).getOwner())));
@@ -407,9 +386,9 @@ public class Monopoly {
 									default:
 										break;
 									}	
-									//							} else {
-									//								ui.displayError(UI.ERR_INSUFFICIENT_FUNDS);										
-									//							} 
+																} else {
+																	ui.displayError(UI.ERR_INSUFFICIENT_FUNDS);										
+																} 
 								} else {
 									ui.displayError(UI.ERR_RENT_ALREADY_PAID);									
 								}
@@ -449,6 +428,135 @@ public class Monopoly {
 
 				}
 			}
+			
+			
+			if(command.equalsIgnoreCase("Build House"))
+            {
+              ui.displayString("Enter the name of the property you want to build a house on");
+              
+              boolean found = false;
+              
+              String nameOfProperty = ui.getCommand();
+              ui.displayString(nameOfProperty);
+              
+              int i = 0;
+              int j;
+              
+              while(!found && i < PROPERTY_SHORT_NAMES.length)
+              {
+                if(nameOfProperty.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i]))
+                {
+                  found = true;
+                }
+              }
+              i++;
+              
+              if(found)
+              {
+                boolean ownerOfProperty = false;
+                for(j = 0; j < person.assets.size() && !ownerOfProperty; j++)
+                {
+                  if(nameOfProperty.equalsIgnoreCase(person.assets.get(j).getName()))
+                  {
+                    ownerOfProperty = true;
+                    break;
+                  }
+                }
+                
+                if(ownerOfProperty && person.assets.get(j).getType()==1)
+                {
+                  Site property = (Site) person.assets.get(j);
+                  if(person.Monopoly(property.getColour()))
+                  {
+                    int numOfHousesToBuild = 0;
+                    do{
+                    	 ui.displayString("This property has " + property.getHouses() + " houses");
+                      ui.displayString("Please specify the number of houses you want to build, you can't build more than 4");
+                      String housesToBuild = ui.getCommand();
+                      ui.displayString(housesToBuild);
+                      numOfHousesToBuild = Integer.parseInt(housesToBuild);
+                      property.buildHouse(numOfHousesToBuild, property.getOwner());
+                    }while((numOfHousesToBuild < 1 || numOfHousesToBuild > 4) && property.getHouses()<4);
+                    
+                    
+                    
+                    ui.displayString("Your " + numOfHousesToBuild + " houses have been built.");
+                  } else{
+                	  ui.displayString("You don't have a monopoly on that color group");
+                  }
+                } else{
+                	 ui.displayString("You can only build on a site and it has to be yours ");
+                }
+              } 
+            }
+            
+            if(command.equalsIgnoreCase("Build Hotel"))
+            {
+              int i = 0;
+              
+              
+                ui.displayString("Enter the name of the property you want to build a hotel on");
+                
+                boolean found = false;
+                
+                String nameOfProperty = ui.getCommand();
+                ui.displayString(nameOfProperty);
+                
+                int j;
+                
+                while(!found && i < PROPERTY_SHORT_NAMES.length)
+                {
+                  if(nameOfProperty.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i]))
+                  {
+                    found = true;
+                  }
+                }
+                i++;
+                
+                if(found)
+                {
+                  boolean ownerOfProperty = false;
+                  for(j = 0; j < person.assets.size() && !ownerOfProperty; j++)
+                  {
+                    if(nameOfProperty.equalsIgnoreCase(person.assets.get(j).getName()))
+                    {
+                      ownerOfProperty = true;
+                      break;
+                    }
+                  }
+                  
+                  if(ownerOfProperty && person.assets.get(j).getType()==1)
+                  {
+                    Site property = (Site) person.assets.get(j);
+                    if(person.Monopoly(property.getColour()))
+                    {
+                    	if(property.getHouses() == 4)
+                        {
+                      int numOfHotelsToBuild = 0;
+                      do{
+                    	  ui.displayString("This property has " + property.getHotels() + " hotels");
+                          ui.displayString("Please specify the number of hotels you want to build, you can't build more than 2");
+                        String housesToBuild = ui.getCommand();
+                        ui.displayString(housesToBuild);
+                        numOfHotelsToBuild = Integer.parseInt(housesToBuild);
+                        property.buildHotel(numOfHotelsToBuild, property.getOwner());
+                      }while((numOfHotelsToBuild < 1 || numOfHotelsToBuild > 2)  && property.getHotels()<2);
+                      
+                      
+                      ui.displayString("Your " + numOfHotelsToBuild + " houses have been built.");
+                        } else{
+                        	ui.displayString("You need 4 houses before you can build a hotel");
+                        }
+                    }else{
+                  	  ui.displayString("You don't have a monopoly on that color group");
+                    }
+                  }else{
+                 	 ui.displayString("You can only build on a site and it has to be yours ");
+                  }
+                }
+              
+            }
+			
 
 			if(command.equals("mortgage")){
 
@@ -491,6 +599,140 @@ public class Monopoly {
 					ui.displayString("You didn't enter a property name, please type 'property' to see your property names");
 				}
 				
+			}
+			
+			
+			if(command.equals("demolish hotel")){
+				ui.displayString("Enter the name of the property you want to demolish a hotel on");
+	              
+	              boolean found = false;
+	              
+	              String nameOfProperty = ui.getCommand();
+	              ui.displayString(nameOfProperty);
+	              
+	              int i = 0;
+	              int j;
+	              
+	              while(!found && i < PROPERTY_SHORT_NAMES.length)
+	              {
+	                if(nameOfProperty.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i]))
+	                {
+	                  found = true;
+	                }
+	              }
+	              i++;
+	              
+	              if(found)
+	              {
+	                boolean ownerOfProperty = false;
+	                for(j = 0; j < person.assets.size() && !ownerOfProperty; j++)
+	                {
+	                  if(nameOfProperty.equalsIgnoreCase(person.assets.get(j).getName()))
+	                  {
+	                    ownerOfProperty = true;
+	                    break;
+	                  }
+	                }
+	                
+	                if(ownerOfProperty && person.assets.get(j).getType()==1)
+	                {
+	                  Site property = (Site) person.assets.get(j);
+	                  if(person.Monopoly(property.getColour()))
+	                  {
+	                    int numOfhotelsTodemolish = 0;
+	                    if(property.getHotels()!=0){
+	                    	
+	                    do{
+	                    	 ui.displayString("This property has " + property.getHotels() + " hotels");
+	                      ui.displayString("Please specify the number of hotels you want to demolish, you can't demolish more than 2");
+	                      String hotelsTodemolish = ui.getCommand();
+	                      ui.displayString(hotelsTodemolish);
+	                      numOfhotelsTodemolish = Integer.parseInt(hotelsTodemolish);
+	                      property.demolishHouse(numOfhotelsTodemolish, property.getOwner());
+	                    }while((numOfhotelsTodemolish < 1 || numOfhotelsTodemolish > 2) && property.getHotels()>0);
+	                    
+	                    
+	                    
+	                    ui.displayString("Your " + numOfhotelsTodemolish + " hotels have been demolished.");
+	                    	
+	                    } else{
+	                    	ui.displayString("You have to no hotels");
+	                    }
+	                  } else{
+	                	  ui.displayString("You don't have a monopoly on that color group");
+	                  }
+	                } else{
+	                	 ui.displayString("You can only demolish on a site and it has to be yours ");
+	                }
+	              } 
+			}
+			
+			
+			if(command.equals("demolish house")){
+				ui.displayString("Enter the name of the property you want to demolish a house on");
+	              
+	              boolean found = false;
+	              
+	              String nameOfProperty = ui.getCommand();
+	              ui.displayString(nameOfProperty);
+	              
+	              int i = 0;
+	              int j;
+	              
+	              while(!found && i < PROPERTY_SHORT_NAMES.length)
+	              {
+	                if(nameOfProperty.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i]))
+	                {
+	                  found = true;
+	                }
+	              }
+	              i++;
+	              
+	              if(found)
+	              {
+	                boolean ownerOfProperty = false;
+	                for(j = 0; j < person.assets.size() && !ownerOfProperty; j++)
+	                {
+	                  if(nameOfProperty.equalsIgnoreCase(person.assets.get(j).getName()))
+	                  {
+	                    ownerOfProperty = true;
+	                    break;
+	                  }
+	                }
+	                
+	                if(ownerOfProperty && person.assets.get(j).getType()==1)
+	                {
+	                  Site property = (Site) person.assets.get(j);
+	                  if(person.Monopoly(property.getColour()))
+	                  {
+	                    int numOfHousesTodemolish = 0;
+	                    if(property.getHotels()!=0){
+	                    	if(property.getHouses()!=0){
+	                    do{
+	                    	 ui.displayString("This property has " + property.getHouses() + " houses");
+	                      ui.displayString("Please specify the number of houses you want to demolish, you can't demolish more than 4");
+	                      String housesTodemolish = ui.getCommand();
+	                      ui.displayString(housesTodemolish);
+	                      numOfHousesTodemolish = Integer.parseInt(housesTodemolish);
+	                      property.demolishHouse(numOfHousesTodemolish, property.getOwner());
+	                    }while((numOfHousesTodemolish < 1 || numOfHousesTodemolish > 4) && property.getHouses()>0);
+	                    
+	                    
+	                    
+	                    ui.displayString("Your " + numOfHousesTodemolish + " houses have been demolished.");
+	                    	} else{
+	                    		ui.displayString("You have no houses");
+	                    	}
+	                    } else{
+	                    	ui.displayString("You have to demolish hotels first");
+	                    }
+	                  } else{
+	                	  ui.displayString("You don't have a monopoly on that color group");
+	                  }
+	                } else{
+	                	 ui.displayString("You can only demolish on a site and it has to be yours ");
+	                }
+	              } 
 			}
 
 			if(command.equals("redeem")){
@@ -553,6 +795,26 @@ public class Monopoly {
 
 			if(command.equals("property")){
 				ui.displayString(person.getProperties());
+			}
+			
+			if(!paid){
+				ui.displayString("You must declare  bankruptcy");
+				
+				do{
+					ui.displayString("You must declare  bankruptcy, please type 'bankrupt' ");
+					System.out.println("here");
+					command = ui.getCommand();
+					ui.displayString(command);
+				}while(!command.equals("bankrupt") );
+			}
+			
+			if(command.equals("bankrupt")){
+				ui.displayString("You are out");
+
+				for(int i =0; i<person.assets.size();i++){
+					person.assets.get(i).free();
+				}
+				command = "quit";
 			}
 
 			//Displays message for invalid commands

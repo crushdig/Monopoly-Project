@@ -27,7 +27,7 @@ public class Property extends Square{
 		return value;
 	}
 	
-	public int getRent(){
+	public int getRent(Player person){
 		return rent[0];
 	}
 	
@@ -38,6 +38,11 @@ public class Property extends Square{
 	public void setOwned(Player person){
 		this.owned = true;
 		this.owner = person;
+	}
+	
+	public void free(){
+		this.owned = false;
+		this.owner = null;
 	}
 	
 	public boolean owned(){
@@ -66,7 +71,7 @@ public class Property extends Square{
 	}
 	
 	public String toString () {
-		return this.getName() + " " + this.getRent();
+		return this.getName();
 	}
 	
 
