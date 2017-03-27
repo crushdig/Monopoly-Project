@@ -45,7 +45,10 @@ public class Monopoly {
 
 	private static final String INSTRUCTIONS= "The commands are: 'roll' to roll \n 'help' for instructions \n "
 			+ " 'pay rent' to pay rent \n 'buy' to buy \n 'property' to show properties \n 'balance' to show balance \n "
-			+ " 'done' to end turn \n  'quit' to finish early";
+			+ " 'done' to end turn \n  'quit' to finish early \n  'redeem' to redeem a property \n  'mortgage' to mortgage a property"
+			+ "\n  'build house' to build a house on a property \n  'build hotel' to build a hotel on a property"
+			+ "\n  'demolish house' to demolish a house on a property \n  'demolish hotel' to demolish a hotel on a property"
+			+ "\n 'bankrupt' to declare bankrupcy";
 
 
 	//Array of Square types
@@ -165,7 +168,7 @@ public class Monopoly {
 		return currPlayer;
 	}
 
-	//
+	
 	private void gameplay() throws InterruptedException{
 
 
@@ -342,7 +345,7 @@ public class Monopoly {
 				return;
 			}
 
-		
+		//Enforces payment of rent
 			if( (board.squareType(person.getPosition()) == 1) || (board.squareType(person.getPosition()) == 2) || (board.squareType(person.getPosition()) == 3) )
 			{
 				Property property = board.getProperty(person.getPosition());
@@ -429,7 +432,8 @@ public class Monopoly {
 				}
 			}
 			
-			
+			//This get the name of the property from the user, checks if such a property exists, checks if the current player
+			//is the owner then lets them build
 			if(command.equalsIgnoreCase("Build House"))
             {
               ui.displayString("Enter the name of the property you want to build a house on");
@@ -441,15 +445,17 @@ public class Monopoly {
               
               int i = 0;
               int j;
-              
+              System.out.println("here1");
               while(!found && i < PROPERTY_SHORT_NAMES.length)
               {
                 if(nameOfProperty.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i]))
                 {
                   found = true;
                 }
+                i++;
+                System.out.println("here5");
               }
-              i++;
+             
               
               if(found)
               {
@@ -490,6 +496,8 @@ public class Monopoly {
               } 
             }
             
+			//This get the name of the property from the user, checks if such a property exists, checks if the current player
+			//is the owner then lets them build
             if(command.equalsIgnoreCase("Build Hotel"))
             {
               int i = 0;
@@ -510,8 +518,9 @@ public class Monopoly {
                   {
                     found = true;
                   }
+                  i++;
                 }
-                i++;
+                
                 
                 if(found)
                 {
@@ -557,7 +566,8 @@ public class Monopoly {
               
             }
 			
-
+          //This get the name of the property from the user, checks if such a property exists, checks if the current player
+			//is the owner then lets them mortgage
 			if(command.equals("mortgage")){
 
 				ui.displayString("Enter the name of the property you want mortgage");
@@ -601,7 +611,8 @@ public class Monopoly {
 				
 			}
 			
-			
+			//This get the name of the property from the user, checks if such a property exists, checks if the current player
+			//is the owner then lets them demolish
 			if(command.equals("demolish hotel")){
 				ui.displayString("Enter the name of the property you want to demolish a hotel on");
 	              
@@ -619,8 +630,9 @@ public class Monopoly {
 	                {
 	                  found = true;
 	                }
+	                i++;
 	              }
-	              i++;
+	              
 	              
 	              if(found)
 	              {
@@ -667,7 +679,8 @@ public class Monopoly {
 	              } 
 			}
 			
-			
+			//This get the name of the property from the user, checks if such a property exists, checks if the current player
+			//is the owner then lets them demolish
 			if(command.equals("demolish house")){
 				ui.displayString("Enter the name of the property you want to demolish a house on");
 	              
@@ -685,8 +698,9 @@ public class Monopoly {
 	                {
 	                  found = true;
 	                }
+	                i++;
 	              }
-	              i++;
+	              
 	              
 	              if(found)
 	              {
@@ -735,6 +749,8 @@ public class Monopoly {
 	              } 
 			}
 
+			//This get the name of the property from the user, checks if such a property exists, checks if the current player
+			//is the owner then lets them redeem
 			if(command.equals("redeem")){
 				ui.displayString("Enter the name of the property you want redeem");
 				boolean found = false;
@@ -797,7 +813,9 @@ public class Monopoly {
 				ui.displayString(person.getProperties());
 			}
 			
-			if(!paid){
+			if( (board.squareType(person.getPosition()) == 1) || (board.squareType(person.getPosition()) == 2) || (board.squareType(person.getPosition()) == 3) )
+			{
+			if(!paid && !board.getProperty(person.getPosition()).getOwner().equals(person)){
 				ui.displayString("You must declare  bankruptcy");
 				
 				do{
@@ -806,6 +824,7 @@ public class Monopoly {
 					command = ui.getCommand();
 					ui.displayString(command);
 				}while(!command.equals("bankrupt") );
+			}
 			}
 			
 			if(command.equals("bankrupt")){
@@ -818,7 +837,11 @@ public class Monopoly {
 			}
 
 			//Displays message for invalid commands
-			if(!(command.equals("redeem")) &&!(command.equals("mortgage")) &&!(command.equals("property")) && !(command.equals("balance")) && !(command.equals("help")) && !(command.equals("pay rent"))
+			if(!(command.equalsIgnoreCase("demolish hotel")) &&!(command.equalsIgnoreCase("demolish house")) 
+					&&!(command.equalsIgnoreCase("build hotel")) &&!(command.equalsIgnoreCase("build house")) 
+					&&!(command.equals("bankrupt")) &&!(command.equals("redeem")) &&!(command.equals("mortgage")) 
+					&&!(command.equals("property")) && !(command.equals("balance")) 
+					&& !(command.equals("help")) && !(command.equals("pay rent"))
 					&& !(command.equals("quit")) && !(command.equals("done")) && !(command.equals("buy")) && !(command.equals("roll"))){
 				ui.displayString("Invalid command, type 'help' for help");
 			}
