@@ -30,12 +30,24 @@ public class Site extends Property{
 		return hotels;
 	}
 	
-	public void buildHouse(){
-		houses++;
+	public void buildHouse(int number_of_houses, Player person){
+		houses += number_of_houses;
+		person.payRent(number_of_houses * house_price);
 	}
 	
-	public void buildHotel(){
-		hotels++;
+	public void buildHotel(int number_of_hotels,  Player person){
+		hotels += number_of_hotels;
+		person.payRent(number_of_hotels * hotel_price);
+	}
+	
+	public void demolishHotel(int number_of_hotels ,  Player person){
+		houses -= number_of_hotels;
+		person.getRent(number_of_hotels * hotel_price * 0.5);
+	}
+	
+	public void demolishHouse(int number_of_houses ,  Player person){
+		houses -= number_of_houses;
+		person.getRent(number_of_houses * (hotel_price * 0.5));
 	}
 	
 	public int getHotelPrice(){
@@ -46,11 +58,12 @@ public class Site extends Property{
 		return house_price;
 	}
 	
-	public int getRent(){
-		return rent[this.houses];
+	public int getRent(Player person){
+		int count = houses + hotels;
+		return rent[count];
 	}
 
 	public String toString () {
-		return this.getName() + " " + this.getRent() + " " + this.getColour();
+		return this.getName() + " " + this.getColour();
 	}
 }
