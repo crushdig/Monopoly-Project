@@ -7,15 +7,7 @@ public class Station extends Property{
 	}
 	
 	public int getRent(Player person){
-		int count = -1;
-		
-		for(int i=0; i<person.assets.size();i++){
-			if(person.assets.get(i) instanceof Station){
-				count++;
-			}
-		}
-		
-		return rent[count];
+		return rent[super.getOwner().getNumStationsOwned()-1];
 	}
 
 

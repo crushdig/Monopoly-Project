@@ -18,6 +18,7 @@ public class Token extends JComponent{
 	private int y;
 	private Shape shape;
 	private Color color;
+	private Graphics2D g2 ;
 	public Token(){ 
 		super();
 		setVisible(true);
@@ -51,13 +52,17 @@ public class Token extends JComponent{
 	}
 
 	public void paintComponent(Graphics g) {
-	 	 Graphics2D g2 = (Graphics2D) g;
+	 	 g2 = (Graphics2D) g;
 	 	super.paintComponent(g);
 	 	
 	 	g2.setColor(color);
 	 	g2.fill(shape); //fills the shape with the colour specified
 	 
 	 	 g2.draw(this.shape);
+	}
+	
+	public void transparent(){
+		setVisible(false);
 	}
 	
 }

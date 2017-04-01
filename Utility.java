@@ -6,16 +6,12 @@ public class Utility extends Property{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public int getRent(Player person){
-		int count = -1;
-		
-		for(int i=0; i<person.assets.size();i++){
-			if(person.assets.get(i) instanceof Utility){
-				count++;
-			}
-		}
-		
-		return rent[count];
+	public int getRent(Player person){		
+		return getRentMultiplier();
+	}
+	
+	public int getRentMultiplier () {
+		return rent[super.getOwner().getNumUtilitiesOwned()-1];
 	}
 
 }

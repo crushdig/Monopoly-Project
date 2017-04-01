@@ -2,6 +2,8 @@
 //This class is for the properties and their characteristics, it inherits Square as a Property is a Square
 public class Property extends Square{
 	
+	private static final float MORTGAGE_PREMIUM = 1.1f;
+	
 	private int value;
 	protected int[] rent;
 	private boolean owned;
@@ -27,8 +29,8 @@ public class Property extends Square{
 		return value;
 	}
 	
-	public int getRent(Player person){
-		return rent[0];
+	public int getRent(){
+		return 0;
 	}
 	
 	public Player getOwner(){
@@ -40,9 +42,11 @@ public class Property extends Square{
 		this.owner = person;
 	}
 	
-	public void free(){
-		this.owned = false;
-		this.owner = null;
+	public void releaseOwnership () {
+		owned = false;
+		owner = null;
+		mortgaged = false;
+		return;
 	}
 	
 	public boolean owned(){
@@ -57,17 +61,22 @@ public class Property extends Square{
 	mortgaged = true;
 	}
 	
-	public void redeem(){
+	public void setNotMortgaged() {
 		mortgaged = false;
+		return;
+	}
+	
+	public int getMortgageRemptionPrice () {
+		return (int) (((float) mortgage_value) * MORTGAGE_PREMIUM);
 	}
 	
 	public int getMortgageValue(){
 		return this.mortgage_value;
 	}
 	
-	public String getColour()
-	{
-	  return null;
+	
+	public boolean equals (String string) {
+		return getName().equalsIgnoreCase(string);
 	}
 	
 	public String toString () {

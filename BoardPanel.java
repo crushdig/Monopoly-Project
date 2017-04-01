@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -24,172 +25,189 @@ public class BoardPanel extends JFrame{
 	private CommandPanel commandPanel;
 	
 	
-	public BoardPanel(Token[] token){
+	public BoardPanel(ArrayList<Token> token, int numberOfTokens){
 		
 		
 		
 		int offset = 10;
 		//The tokens are initialised and added to the board
-		switch (token.length) {
+		switch (numberOfTokens) {
 	      case 2:
-	        token[0] = new Token();
+	        token.add(new Token());
 	        
 
-	        token[0].setPosition(600, 603);
+	        token.get(0).setPosition(600, 603);
 
-	        token[1] = new Token(Color.red);
+	        
+	        token.add(new Token(Color.red));
 
 	       
-	        token[1].setPosition(600 + offset, 603 + offset);
+	        token.get(1).setPosition(600 + offset, 603 + offset);
 	        
-	        layeredPane.add(token[0], new Integer(2));
-		    layeredPane.add(token[1], new Integer(3));
+	        layeredPane.add(token.get(0), new Integer(2));
+		    layeredPane.add(token.get(1), new Integer(3));
 
 	        break;
 
 	      case 3:
-	        token[0] = new Token();
+	    	  token.add(new Token());
+		        
 
+		        token.get(0).setPosition(600, 603);
 
-	        token[0].setPosition(600, 603);
+		        
+		        token.add(new Token(Color.red));
 
-	        token[1] = new Token(Color.red);
+		       
+		        token.get(1).setPosition(600 + offset, 603 + offset);
 
-	       
-	        token[1].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
-	        token[2] = new Token(Color.blue);
+	        	        
+	        token.add(new Token(Color.blue));
 
-	       
-	        token[2].setPosition(600 + offset, 603 + offset);
+		       
+	        token.get(2).setPosition(600 + offset, 603 + offset);
 	        
-	        layeredPane.add(token[0], new Integer(2));
-		    layeredPane.add(token[1], new Integer(3));
-		    layeredPane.add(token[2], new Integer(4));
-		    
+	        layeredPane.add(token.get(0), new Integer(2));
+		    layeredPane.add(token.get(1), new Integer(3));
+		    layeredPane.add(token.get(2), new Integer(4));
 
 	        break;
 
 	      case 4:
-	        token[0] = new Token();
+	    	  token.add(new Token());
+		        
 
-	       
-	        token[0].setPosition(600, 603);
+		        token.get(0).setPosition(600, 603);
 
-	        token[1] = new Token(Color.red);
+		        
+		        token.add(new Token(Color.red));
 
-	       
-	        token[1].setPosition(600 + offset, 603 + offset);
+		       
+		        token.get(1).setPosition(600 + offset, 603 + offset);
 
-	        offset = offset + 10;
-
-	        token[2] = new Token(Color.blue);
-
-	       
-	        token[2].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
-	        token[3] = new Token(Color.green);
+	        	        
+	        token.add(new Token(Color.blue));
 
-	     
-	        token[3].setPosition(600 + offset, 603 + offset);
+		       
+	        token.get(2).setPosition(600 + offset, 603 + offset);
+
+	        offset = offset + 10;
+
 	        
-	        layeredPane.add(token[0], new Integer(2));
-		    layeredPane.add(token[1], new Integer(3));
-		    layeredPane.add(token[2], new Integer(4));
-		    layeredPane.add(token[3], new Integer(5));
+	        token.add(new Token(Color.green));
+
+		       
+	        token.get(3).setPosition(600 + offset, 603 + offset);
+	        
+	        layeredPane.add(token.get(0), new Integer(2));
+		    layeredPane.add(token.get(1), new Integer(3));
+		    layeredPane.add(token.get(2), new Integer(4));
+		    layeredPane.add(token.get(3), new Integer(5));
 		    
 		    
 	        break;
 
 	      case 5:
-	        token[0] = new Token();
+	    	  token.add(new Token());
+		        
 
-	      
-	        token[0].setPosition(600, 603);
+		        token.get(0).setPosition(600, 603);
 
-	        token[1] = new Token(Color.red);
+		        
+		        token.add(new Token(Color.red));
 
-	       
-	        token[1].setPosition(600 + offset, 603 + offset);
+		       
+		        token.get(1).setPosition(600 + offset, 603 + offset);
+
 
 	        offset = offset + 10;
 
-	        token[2] = new Token(Color.blue);
+	        	        
+	        token.add(new Token(Color.blue));
+
+		       
+	        token.get(2).setPosition(600 + offset, 603 + offset);
+
+	        offset = offset + 10;
 
 	        
-	        token[2].setPosition(600 + offset, 603 + offset);
+	        token.add(new Token(Color.green));
 
-	        offset = offset + 10;
-
-	        token[3] = new Token(Color.green);
-
-	       
-	        token[3].setPosition(600 + offset, 603 + offset);
-
-	        offset = offset + 10;
-
-	        token[4] = new Token(Color.yellow);
-
-	       
-	        token[4].setPosition(600 + offset, 603 + offset);
+		       
+	        token.get(3).setPosition(600 + offset, 603 + offset);
 	        
-	        layeredPane.add(token[0], new Integer(2));
-		    layeredPane.add(token[1], new Integer(3));
-		    layeredPane.add(token[2], new Integer(4));
-		    layeredPane.add(token[3], new Integer(5));
-		    layeredPane.add(token[4], new Integer(6));
+	        offset = offset + 10;
+	        
+	        token.add(new Token(Color.yellow));
+
+		       
+	        token.get(4).setPosition(600 + offset, 603 + offset);
+
+	        
+	        layeredPane.add(token.get(0), new Integer(2));
+		    layeredPane.add(token.get(1), new Integer(3));
+		    layeredPane.add(token.get(2), new Integer(4));
+		    layeredPane.add(token.get(3), new Integer(5));
+		    layeredPane.add(token.get(4), new Integer(6));
 
 	        break;
 
 	      case 6:
-	        token[0] = new Token();
+	    	  token.add(new Token());
+		        
 
-	      
-	        token[0].setPosition(600, 603);
+		        token.get(0).setPosition(600, 603);
 
-	        token[1] = new Token(Color.red);
+		        
+		        token.add(new Token(Color.red));
 
-	        
-	        token[1].setPosition(600 + offset, 603 + offset);
+		       
+		        token.get(1).setPosition(600 + offset, 603 + offset);
 
-	        offset = offset + 10;
-
-	        token[2] = new Token(Color.blue);
-
-	       
-	        token[2].setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
-	        token[3] = new Token(Color.green);
+	        	        
+	        token.add(new Token(Color.blue));
 
-	        
-	        token[3].setPosition(600 + offset, 603 + offset);
-
-	        offset = offset + 10;
-
-	        token[4] = new Token(Color.yellow);
-
-	        
-	        token[4].setPosition(600 + offset, 603 + offset);
+		       
+	        token.get(2).setPosition(600 + offset, 603 + offset);
 
 	        offset = offset + 10;
 
-	        token[5] = new Token(Color.cyan);
-
-	       
-	        token[5].setPosition(600 + offset, 603 + offset);
 	        
-	        layeredPane.add(token[0], new Integer(2));
-		    layeredPane.add(token[1], new Integer(3));
-		    layeredPane.add(token[2], new Integer(4));
-		    layeredPane.add(token[3], new Integer(5));
-		    layeredPane.add(token[4], new Integer(6));
-		    layeredPane.add(token[5], new Integer(7));
+	        token.add(new Token(Color.green));
+
+		       
+	        token.get(3).setPosition(600 + offset, 603 + offset);
+	        
+	        offset = offset + 10;
+	        
+	        token.add(new Token(Color.yellow));
+
+		       
+	        token.get(4).setPosition(600 + offset, 603 + offset);
+
+	        offset = offset + 10;
+
+	        
+	        token.add(new Token(Color.cyan));
+
+		       
+	        token.get(5).setPosition(600 + offset, 603 + offset);
+	        
+	        layeredPane.add(token.get(0), new Integer(2));
+		    layeredPane.add(token.get(1), new Integer(3));
+		    layeredPane.add(token.get(2), new Integer(4));
+		    layeredPane.add(token.get(3), new Integer(5));
+		    layeredPane.add(token.get(4), new Integer(6));
+		    layeredPane.add(token.get(5), new Integer(7));
 
 	        break;
 

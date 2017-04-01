@@ -167,7 +167,7 @@ public class Board {
 	//Returns information about a square
 	public String squareInfo(int position){
 		 
-		if( (squares.get(position).getType() == 1) || (squares.get(position).getType() == 2) || squares.get(position).getType() == 3)
+		if( (squares.get(position) instanceof Property) )
 		{
 			return squares.get(position).getName() + " " + ((Property) squares.get(position)).getValue();
 		}
@@ -187,6 +187,51 @@ public class Board {
 		return (Property) squares.get(position);
 	}
 	
+	public Property getProperty (String name) {
+		Property property = null;
+		for (Square s : squares) {
+			if (s instanceof Property) {
+				Property p = (Property) s;
+				if (p.equals(name)) {
+					property = p;
+				}
+			}
+		}
+		return property;
+	}
+	
+	public boolean isProperty (int index) {
+		return squares.get(index) instanceof Property;
+	}
+	
+	public boolean isProperty (String name) {
+		boolean found = false;
+		for (Square s :squares) {
+			if (s instanceof Property) {
+				Property p = (Property) s;
+				if (p.equals(name)) {	
+					found = true;
+				}
+			}
+		}
+		return found;
+	}
+	
+	public ArrayList<Square> getSquares(){
+		return squares;
+	}
+	
+	public boolean isSite (String name) {
+		return isProperty(name) && getProperty(name) instanceof Site;
+	}
+
+	public boolean isStation (String name) {
+		return isProperty(name) && getProperty(name) instanceof Station;
+	}
+
+	public boolean isUtility (String name) {
+		return isProperty(name) && getProperty(name) instanceof Utility;
+	}
 	
 }
 
