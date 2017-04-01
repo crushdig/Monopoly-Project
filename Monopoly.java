@@ -9,8 +9,9 @@ import javax.swing.JOptionPane;
 
 public class Monopoly {
 	private int players;
-	private Token[]  token;
+	private ArrayList<Token>  token;
 	private Player currPlayer;
+	int diceroll = 0;
 
 	private UI ui;
 	// Array of coordinates for the position of each square on the board
@@ -46,9 +47,10 @@ public class Monopoly {
 	private static final String INSTRUCTIONS= "The commands are: 'roll' to roll \n 'help' for instructions \n "
 			+ " 'pay rent' to pay rent \n 'buy' to buy \n 'property' to show properties \n 'balance' to show balance \n "
 			+ " 'done' to end turn \n  'quit' to finish early \n  'redeem' to redeem a property \n  'mortgage' to mortgage a property"
-			+ "\n  'build house' to build a house on a property \n  'build hotel' to build a hotel on a property"
-			+ "\n  'demolish house' to demolish a house on a property \n  'demolish hotel' to demolish a hotel on a property"
-			+ "\n 'bankrupt' to declare bankrupcy";
+			+ "\n  'build' to build on a property \n"
+			+ "\n  'demolish to demolish on a property \n"
+			+ "\n 'bankrupt' to declare bankrupcy"
+			+ "\n 'cheat' to use cheat for testing";
 
 
 	//Array of Square types
@@ -63,14 +65,7 @@ public class Monopoly {
 			TYPE_GOTO_JAIL, TYPE_SITE, TYPE_SITE, TYPE_COMMUNITY, TYPE_SITE,
 			TYPE_STATION, TYPE_CHANCE, TYPE_SITE, TYPE_TAX, TYPE_SITE };
 
-	private static final String[] PROPERTY_SHORT_NAMES = {
-			  "Old Kent Rd","Whitechapel Rd","The Angel Islington","Euston Rd","Pentonville Rd",
-			  "Pall Mall","Whitehall","Northumberland Ave","Bow St","MarlboroughSt","Vine St",
-			  "Strand","Fleet St","Trafalgar Sq","Leicester Sq","CoventrySt","Piccadilly",
-			  "Regent St","Oxford St","Bond St","Park Lane","Mayfair","King's Cross Station",
-			  "Marylebone Station",
-			  "Fenchurch St Station",
-			  "Liverpool St Station","Electric Co","Water Works"};
+	
 
 
 	//The Dice being used in the game
@@ -95,7 +90,8 @@ public class Monopoly {
 			this.players = Integer.parseInt(players);
 		}while((this.players<2) || (this.players>6));
 
-		token = new Token[this.players];
+	//	token = new Token[this.players];
+		token = new ArrayList<Token>();
 
 		String name;
 
@@ -108,10 +104,10 @@ public class Monopoly {
 
 
 		board = new Board();
-		//board = new Board(player); testing
+		
 
 
-		ui= new UI(token);
+		ui= new UI(token, player.size());
 
 
 
@@ -169,6 +165,7 @@ public class Monopoly {
 	}
 
 	
+	
 	private void gameplay() throws InterruptedException{
 
 
@@ -186,117 +183,374 @@ public class Monopoly {
 			}
 		}	
 
-
-		while(!gameover){
-			//j is the index of the person that starts
-			int index_Of_Player_That_Starts=j;
-
-			//Takes turns based on the player that starts
-			switch(index_Of_Player_That_Starts){
-
-			//Turns are taken as normal if person 0 starts
-			case 0:
-				for(i=j;i<player.size();i++){
-
-					if(gameover) break;
-					turn(player.get(i), i);
+		do {
+			turn(temp,i);
+			if (!gameover) {
+				temp = getNextPlayer(temp);
+				i++;
+			}
+			if(i>=token.size()){
+				i %= token.size();
+			}
+			
+		} while (!gameover);
+		
+		//Prints the winner if the game is over
+		if(gameover){
+			double max_assets = 0;
+			int playerIndex = 0;	
+			for(i=0;i<player.size();i++){
+				ui.displayString(player.get(i).getName() + " is worth " + player.get(i).getWorth());
+				if(player.get(i).getWorth()>max_assets){
+					max_assets = player.get(i).getWorth();
+					playerIndex = i;
 				}
-				break;
-				//If person 1 and above starts, turns are taken in ascending order then the person 0 takes their turn
-			case 1:
-				for(i=j;i<player.size();i++){
-					if(gameover) break;
-					turn(player.get(i), i);
-
-				}
-
-				for(int k=0;k<i;k++){
-					if(gameover) break;
-					turn(player.get(k), k);
-				}
-				break;
-
-			case 2:
-				for(i=j;i<player.size();i++){
-					if(gameover) break;
-					turn(player.get(i), i);
-				}
-				for(int k=0;k<i;k++){
-					if(gameover) break;
-					turn(player.get(k), k);
-				}
-				break;
-			case 3:
-				for(i=j;i<player.size();i++){
-					if(gameover) break;
-					turn(player.get(i), i);
-				}
-				for(int k=0;k<i;k++){
-					if(gameover) break;
-					turn(player.get(k), k);
-				}
-				break;
-
-			case 4:
-				for(i=j;i<player.size();i++){
-					if(gameover) break;
-					turn(player.get(i), i);
-				}
-				for(int k=0;k<i;k++){
-					if(gameover) break;
-					turn(player.get(k), k);
-				}
-				break;
-
-			case 5:
-				for(i=j;i<player.size();i++){
-					if(gameover) break;
-					turn(player.get(i), i);
-				}
-				for(int k=0;k<i;k++){
-					if(gameover) break;
-					turn(player.get(k), k);
-				}
-				break;				
-
 
 			}
-
-
-			//Prints the winner if the game is over
-			if(gameover){
-				double max_assets = 0;
-				int playerIndex = 0;	
-				for(i=0;i<player.size();i++){
-					ui.displayString(player.get(i).getName() + " is worth " + player.get(i).getWorth());
-					if(player.get(i).getWorth()>max_assets){
-						max_assets = player.get(i).getWorth();
-						playerIndex = i;
-					}
-
-				}
-
-				ui.displayString(player.get(playerIndex).getName() + " Wins! :)");
-
-			}
-
-
+			ui.displayString(player.get(playerIndex).getName() + " Wins! :)");
 		}
 
-		ui.displayString("Game is over");
+			
+		ui.displayGameOver();
 
 		return;
 	}
+	
+	private void showProperties(){
+		for (Square s :board.getSquares()) {
+			if (s instanceof Property) {
+				Property p = (Property) s;
+				ui.displayString(p.toString());
+			}
+		}
+	}
+	
+	private Property getInputProperty(){
+		
+		String nameOfProperty, command;
+		
+        do{
+        	ui.displayString("Enter the name of the property you want to process");
+        	nameOfProperty = ui.getCommand();
+        	if(!board.isProperty(nameOfProperty)){
+        		ui.displayString("This is not a property, please enter a property, type 'properties' for the list of properties");
+        		command = ui.getCommand();
+        		if(command.equals("properties")){
+        			showProperties();
+        		}
+        	}
+        	
+        }while(!board.isProperty(nameOfProperty));
+        
+        
+        ui.displayString(nameOfProperty);
+        
+        
+		return board.getProperty(nameOfProperty);
+	}
+	
+	private int getInputNumber(){
+		
+		int numOfHousesToBuild;
+		ui.displayString("Please specify the number of houses you want to process, you can't process more than 5");
+        String housesToBuild = ui.getCommand();
+        ui.displayString(housesToBuild);
+        numOfHousesToBuild = Integer.parseInt(housesToBuild);
+        
+        
+		return numOfHousesToBuild;
+	}
+	
+	public Player getNextPlayer (Player p) {
+		Player nextPlayer;
+		int i=0;
+		for (i=0;i<player.size();i++) {
+			if(player.get(i) == p){
+				break;
+			}
+		}
+		nextPlayer = player.get(((i+1)%player.size()));
+		return nextPlayer;
+	}
+	
+	public Token getNextToken (Token t) {
+		Token nextToken;
+		int i=0;
+		for (i=0;i<token.size();i++) {
+			if(token.get(i) == t){
+				break;
+			}
+		}
+		nextToken = token.get(((i+1)%token.size()));
+		return nextToken;
+	}
+	
+	public void processBankrupt (Player p, Token t) {
+		ui.displayBankrupt(p);
+		Player tempPlayer = getNextPlayer(p);
+		Token tempToken = getNextToken(t);
+		player.remove(p);
+		t.transparent();
+		token.remove(t);
+		p = tempPlayer;
+		t = tempToken;
+		if (player.size()==1) {
+			gameover = true;
+		}
+		
+		return;
+	}
+	
+	public void processCheat (Player p) {
+		String command = "";
+		int cheat = 0;
+		do{
+		ui.displayString("Which cheat do you want? Type 1 for the property cheat or 2 for the bankrupt cheat");
+		
+		command = ui.getCommand();
+		ui.displayString(command);
+		
 
+		}while(!command.equalsIgnoreCase("1") && !command.equalsIgnoreCase("2"));
+		
+		cheat = Integer.parseInt(command);
+		
+		switch (cheat) {
+			case 1 :       // acquire colour group
+				Property property = board.getProperty("Old Kent Rd");
+				p.addProperty(property);		
+				property = board.getProperty("Whitechapel Rd");
+				p.addProperty(property);
+				break;
+			case 2 :	   // make zero balance
+				p.payRent((int)p.getbalance()*2);
+				break;
+		}
+		return;
+	}
+	
+	private void processBuild (Player p) {
+		Property property = getInputProperty();
+		if (property.owned() && property.getOwner().equals(p)) {
+			if (property instanceof Site) {
+				Site site = (Site) property;
+				if (p.Monopoly(site)) {
+					if (!site.isMortgaged()) {
+						int numBuildings = getInputNumber();
+						if (numBuildings>0) {
+							if (site.canBuild(numBuildings)) {
+								int debit = numBuildings*site.getHousePrice();
+								if ((int)p.getbalance()>debit) {
+									site.build(numBuildings);
+									p.payRent(debit);
+									ui.displayBuild(p,site,numBuildings);
+								} else {
+									ui.displayError(UI.ERR_INSUFFICIENT_FUNDS);
+								}
+							} else {
+								ui.displayError(UI.ERR_TOO_MANY_BUILDINGS);
+							}
+						} else {
+							ui.displayError(UI.ERR_TOO_FEW_BUILDINGS);
+						}
+					} else {
+						ui.displayError(UI.SITE_IS_MORTGAGED);
+					}
+				} else {
+					ui.displayError(UI.ERR_DOES_NOT_HAVE_GROUP);
+				}
+			} else {
+				ui.displayError(UI.ERR_NOT_A_SITE);
+			}
+		} else {
+			ui.displayError(UI.ERR_NOT_YOURS);
+		}
+		return;
+	}
+	
+	private void processDemolish (Player p) {
+		Property property = getInputProperty();
+		if (property.owned() && property.getOwner().equals(p)) {
+			if (property instanceof Site) {
+				Site site = (Site) property;
+				int numBuildings = getInputNumber();
+				if (numBuildings>0) {
+					if (site.canDemolish(numBuildings)) {
+						site.demolish(numBuildings);
+						int credit = numBuildings * site.getHousePrice()/2;
+						p.getRent(credit);
+						ui.displayDemolish(p,site,numBuildings);
+					} else {
+						ui.displayError(UI.ERR_TOO_MANY_BUILDINGS);
+					}
+				} else {
+					ui.displayError(UI.ERR_TOO_FEW_BUILDINGS);
+				}
+			} else {
+				ui.displayError(UI.ERR_NOT_A_SITE);
+			}
+		} else {
+			ui.displayError(UI.ERR_NOT_YOURS);
+		}
+		return;		
+	}
+	
+	public void processMortgage(Player p) {
+		Property property = getInputProperty();
+		if (property.owned() && property.getOwner().equals(p)) {
+			if ((property instanceof Site) && !((Site) property).hasBuildings() || (property instanceof Station) || (property instanceof Utility)) {
+				if (!property.isMortgaged()) {
+					property.mortgage();
+					p.getRent(property.getMortgageValue());
+					ui.displayMortgage(p,property);
+				} else {
+					ui.displayError(UI.ERR_IS_MORTGAGED);
+				}
+			} else {
+				ui.displayError(UI.ERR_HAS_BUILDINGS);
+			}
+		} else {
+			ui.displayError(UI.ERR_NOT_YOURS);
+		}
+		return;		
+	}
+
+	public void processRedeem (Player p) {
+		Property property = getInputProperty();
+		if (property.owned() && property.getOwner().equals(p)) {
+			if (property.isMortgaged()) {
+				int price = property.getMortgageRemptionPrice();
+				if ((int)p.getbalance() >= price) {
+					property.setNotMortgaged();
+					p.payRent(price);
+					ui.displayMortgageRedemption(p,property);
+				} else {
+					ui.displayError(UI.ERR_INSUFFICIENT_FUNDS);
+				}
+			} else {
+				ui.displayError(UI.ERR_IS_NOT_MORTGAGED);
+			}
+		} else {
+			ui.displayError(UI.ERR_NOT_YOURS);
+		}
+		return;			
+	}
+	
+	public void processRent(Player p, boolean paid){
+		
+		Player person = p;
+		
+		Property property = board.getProperty(person.getPosition());
+		if( property instanceof Property )
+		{
+			if (property.owned()) {
+				if(!property.isMortgaged()){
+					if (!property.getOwner().equals(person)) {
+						if (!paid) {
+							
+							switch(board.squareType(person.getPosition())){
+							case 1:
+								board.getProperty(person.getPosition()).getOwner().getRent(person.payRent(board.getProperty(person.getPosition()).getRent()));
+								ui.displayString(person.getName() + " paid rent to " + board.getProperty(person.getPosition()).getOwner().getName());
+								paid = true;
+								break;
+							case 2:
+								board.getProperty(person.getPosition()).getOwner().getRent(person.payRent(board.getProperty(person.getPosition()).getRent()));
+								ui.displayString(person.getName() + " paid rent to " + board.getProperty(person.getPosition()).getOwner().getName());
+								paid = true;
+								break;
+							case 3:
+								board.getProperty(person.getPosition()).getOwner().getRent( person.payRent(diceroll * board.getProperty(person.getPosition()).getRent()));
+								ui.displayString(person.getName() + " paid rent to " + board.getProperty(person.getPosition()).getOwner().getName());
+								paid = true;
+								break;
+																
+							default:
+								break;
+							}	
+														 
+						} else {
+							ui.displayError(UI.ERR_RENT_ALREADY_PAID);									
+						}
+					} else {
+						ui.displayError(UI.ERR_SELF_OWNED);								
+					}
+				}	else{
+					ui.displayString("This property has been mortgaged");	
+				}
+			} else {
+				ui.displayError(UI.ERR_NOT_OWNED);							
+			}
+		}	else {
+			ui.displayError(UI.ERR_NOT_A_PROPERTY);
+		}
+		
+		
+	}
+	
+	public void processBuy(Player p){
+		Player person = p;
+		//Checks if you're on a property that can be bought
+		Property property = board.getProperty(person.getPosition());
+		if( property instanceof Property ){
+			//Checks if the property isn't owned
+			if(!property.owned()){
+				person.buy(board.getProperty(person.getPosition()));
+				ui.displayString("You bought " + board.getProperty(person.getPosition()).getName());
+			}
+
+			else{
+				ui.displayString("This is owned");
+			}
+		}
+
+		else{
+
+			ui.displayString("This cannot be bought");
+
+		}
+	}
+	
+	public String balanceCheck(Player person){
+		String command = "";
+		do{
+			ui.displayString("You are bankrupt, please sell houses by typing 'demolish' if you have no "
+					+ "buildings to demolish type 'mortgage' to mortgage, type 'property' to see your properties and their status");
+			command = ui.getCommand();
+			ui.displayString(command);
+			
+			if(command.equals("mortgage")){
+
+				processMortgage(person);
+			}
+			
+			if(command.equals("demolish")){
+				processDemolish (person);
+			}
+			
+			if(command.equals("property")){
+				ui.displayAssets(person);
+			}
+			
+			if(person.allMortgaged() && person.isBankrupt()){
+				command = "bankrupt";
+			}
+			
+		}while(!command.equalsIgnoreCase("bankrupt"));
+		return command;
+	}
+	
 	//Function contains all the actions a player can perform in their turn
 	public void turn(Player person, int person_number) throws InterruptedException{
 		String command="";
 		boolean rolled = false;
 		boolean paid = false;
-		int diceroll = 0;
-
+		
+		
+		
 		ui.displayString(person.getName() + "'s turn");
-
+		
+		
 
 		do{
 			ui.displayString("Please roll");
@@ -327,12 +581,19 @@ public class Monopoly {
 			}
 		}while(!rolled);
 
+		
 
 		do{
+			
+			if(person.isBankrupt()){
+				balanceCheck(person);				
+			}
+			
+			else{
 			ui.displayString("Please enter a command");
 			command = ui.getCommand();
 			ui.displayString(command);
-
+			}
 
 			if(command.equals("roll")) {
 				ui.displayString("Stop trying to be sly, you can't roll twice in one turn");
@@ -346,459 +607,52 @@ public class Monopoly {
 			}
 
 		//Enforces payment of rent
-			if( (board.squareType(person.getPosition()) == 1) || (board.squareType(person.getPosition()) == 2) || (board.squareType(person.getPosition()) == 3) )
+			
+			if(board.isProperty(person.getPosition()))
 			{
 				Property property = board.getProperty(person.getPosition());
 				if(property.owned() && !property.getOwner().equals(person) && !paid){
-					do{
-						ui.displayString("You have to pay rent, please type 'pay rent' ");
-						System.out.println("here");
-						command = ui.getCommand();
-						ui.displayString(command);
-					}while(!command.equals("pay rent") );
+					
+						ui.displayString("You have to pay rent");
+						processRent(person, paid);
+						paid = true;
+					
 				}
 			}
 
-			if(command.equals("pay rent")){
-				if( (board.squareType(person.getPosition()) == 1) || (board.squareType(person.getPosition()) == 2) || (board.squareType(person.getPosition()) == 3) )
-				{
-					Property property = board.getProperty(person.getPosition());
 
-					if (property.owned()) {
-						if(!property.isMortgaged()){
-							if (!property.getOwner().equals(person)) {
-								if (!paid) {
-																if (person.getbalance() >= property.getRent(property.getOwner())) {
-									switch(board.squareType(person.getPosition())){
-									case 1:
-										board.getProperty(person.getPosition()).getOwner().getRent(person.payRent(board.getProperty(person.getPosition()).getRent(board.getProperty(person.getPosition()).getOwner())));
-										ui.displayString(person.getName() + " paid rent to " + board.getProperty(person.getPosition()).getOwner().getName());
-										paid = true;
-										break;
-									case 2:
-										board.getProperty(person.getPosition()).getOwner().getRent(person.payRent(board.getProperty(person.getPosition()).getRent(board.getProperty(person.getPosition()).getOwner())));
-										ui.displayString(person.getName() + " paid rent to " + board.getProperty(person.getPosition()).getOwner().getName());
-										paid = true;
-										break;
-									case 3:
-										board.getProperty(person.getPosition()).getOwner().getRent( person.payRent(diceroll * board.getProperty(person.getPosition()).getRent(board.getProperty(person.getPosition()).getOwner())));
-										ui.displayString(person.getName() + " paid rent to " + board.getProperty(person.getPosition()).getOwner().getName());
-										paid = true;
-										break;
-																		
-									default:
-										break;
-									}	
-																} else {
-																	ui.displayError(UI.ERR_INSUFFICIENT_FUNDS);										
-																} 
-								} else {
-									ui.displayError(UI.ERR_RENT_ALREADY_PAID);									
-								}
-							} else {
-								ui.displayError(UI.ERR_SELF_OWNED);								
-							}
-						}	else{
-							ui.displayString("This property has been mortgaged");	
-						}
-					} else {
-						ui.displayError(UI.ERR_NOT_OWNED);							
-					}
-
-				} else {
-					ui.displayError(UI.ERR_NOT_A_PROPERTY);
-				}
-			}
 
 			if(command.equals("buy")){
-				//Checks if you're on a property that can be bought
-				if( (board.squareType(person.getPosition()) == 1) || (board.squareType(person.getPosition()) == 2) || (board.squareType(person.getPosition()) == 3) )
-				{
-					//Checks if the property isn't owned
-					if(!board.getProperty(person.getPosition()).owned()){
-						person.buy(board.getProperty(person.getPosition()));
-						ui.displayString("You bought " + board.getProperty(person.getPosition()).getName());
-					}
-
-					else{
-						ui.displayString("This is owned");
-					}
-				}
-
-				else{
-
-					ui.displayString("This cannot be bought");
-
-				}
+				processBuy(person);
 			}
 			
 			//This get the name of the property from the user, checks if such a property exists, checks if the current player
 			//is the owner then lets them build
-			if(command.equalsIgnoreCase("Build House"))
+			if(command.equalsIgnoreCase("Build"))
             {
-              ui.displayString("Enter the name of the property you want to build a house on");
-              
-              boolean found = false;
-              
-              String nameOfProperty = ui.getCommand();
-              ui.displayString(nameOfProperty);
-              
-              int i = 0;
-              int j;
-              System.out.println("here1");
-              while(!found && i < PROPERTY_SHORT_NAMES.length)
-              {
-                if(nameOfProperty.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i]))
-                {
-                  found = true;
-                }
-                i++;
-                System.out.println("here5");
-              }
-             
-              
-              if(found)
-              {
-                boolean ownerOfProperty = false;
-                for(j = 0; j < person.assets.size() && !ownerOfProperty; j++)
-                {
-                  if(nameOfProperty.equalsIgnoreCase(person.assets.get(j).getName()))
-                  {
-                    ownerOfProperty = true;
-                    break;
-                  }
-                }
-                
-                if(ownerOfProperty && person.assets.get(j).getType()==1)
-                {
-                  Site property = (Site) person.assets.get(j);
-                  if(person.Monopoly(property.getColour()))
-                  {
-                    int numOfHousesToBuild = 0;
-                    do{
-                    	 ui.displayString("This property has " + property.getHouses() + " houses");
-                      ui.displayString("Please specify the number of houses you want to build, you can't build more than 4");
-                      String housesToBuild = ui.getCommand();
-                      ui.displayString(housesToBuild);
-                      numOfHousesToBuild = Integer.parseInt(housesToBuild);
-                      property.buildHouse(numOfHousesToBuild, property.getOwner());
-                    }while((numOfHousesToBuild < 1 || numOfHousesToBuild > 4) && property.getHouses()<4);
-                    
-                    
-                    
-                    ui.displayString("Your " + numOfHousesToBuild + " houses have been built.");
-                  } else{
-                	  ui.displayString("You don't have a monopoly on that color group");
-                  }
-                } else{
-                	 ui.displayString("You can only build on a site and it has to be yours ");
-                }
-              } 
+				processBuild(person);
             }
             
-			//This get the name of the property from the user, checks if such a property exists, checks if the current player
-			//is the owner then lets them build
-            if(command.equalsIgnoreCase("Build Hotel"))
-            {
-              int i = 0;
-              
-              
-                ui.displayString("Enter the name of the property you want to build a hotel on");
-                
-                boolean found = false;
-                
-                String nameOfProperty = ui.getCommand();
-                ui.displayString(nameOfProperty);
-                
-                int j;
-                
-                while(!found && i < PROPERTY_SHORT_NAMES.length)
-                {
-                  if(nameOfProperty.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i]))
-                  {
-                    found = true;
-                  }
-                  i++;
-                }
-                
-                
-                if(found)
-                {
-                  boolean ownerOfProperty = false;
-                  for(j = 0; j < person.assets.size() && !ownerOfProperty; j++)
-                  {
-                    if(nameOfProperty.equalsIgnoreCase(person.assets.get(j).getName()))
-                    {
-                      ownerOfProperty = true;
-                      break;
-                    }
-                  }
-                  
-                  if(ownerOfProperty && person.assets.get(j).getType()==1)
-                  {
-                    Site property = (Site) person.assets.get(j);
-                    if(person.Monopoly(property.getColour()))
-                    {
-                    	if(property.getHouses() == 4)
-                        {
-                      int numOfHotelsToBuild = 0;
-                      do{
-                    	  ui.displayString("This property has " + property.getHotels() + " hotels");
-                          ui.displayString("Please specify the number of hotels you want to build, you can't build more than 2");
-                        String housesToBuild = ui.getCommand();
-                        ui.displayString(housesToBuild);
-                        numOfHotelsToBuild = Integer.parseInt(housesToBuild);
-                        property.buildHotel(numOfHotelsToBuild, property.getOwner());
-                      }while((numOfHotelsToBuild < 1 || numOfHotelsToBuild > 2)  && property.getHotels()<2);
-                      
-                      
-                      ui.displayString("Your " + numOfHotelsToBuild + " houses have been built.");
-                        } else{
-                        	ui.displayString("You need 4 houses before you can build a hotel");
-                        }
-                    }else{
-                  	  ui.displayString("You don't have a monopoly on that color group");
-                    }
-                  }else{
-                 	 ui.displayString("You can only build on a site and it has to be yours ");
-                  }
-                }
-              
-            }
 			
           //This get the name of the property from the user, checks if such a property exists, checks if the current player
 			//is the owner then lets them mortgage
 			if(command.equals("mortgage")){
 
-				ui.displayString("Enter the name of the property you want mortgage");
-				boolean found = false;
-				String name = ui.getCommand();
-				ui.displayString(name);
-				
-				int i =0;
-				int j;
-				while(!found && i<PROPERTY_SHORT_NAMES.length){
-					if(name.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i])){
-						found = true;
-					}
-					i++;
-				}
-				
-				if(found){
-					boolean own_property = false;
-					for(j = 0; j<person.assets.size() && !own_property; j++){
-						if(name.equalsIgnoreCase(person.assets.get(j).getName())){
-							own_property = true;
-							break;
-						}
-					}
-					
-					if(own_property){
-						Property property = person.assets.get(j);
-						person.mortgage(property);
-						ui.displayString(property.getName() + " has been mortgaged");
-					}
-					
-					else{
-						ui.displayString("You don't own this property");
-					}
-				}
-				
-				
-				else{
-					ui.displayString("You didn't enter a property name, please type 'property' to see your property names");
-				}
-				
+				processMortgage(person);
 			}
+			
+			
 			
 			//This get the name of the property from the user, checks if such a property exists, checks if the current player
 			//is the owner then lets them demolish
-			if(command.equals("demolish hotel")){
-				ui.displayString("Enter the name of the property you want to demolish a hotel on");
-	              
-	              boolean found = false;
-	              
-	              String nameOfProperty = ui.getCommand();
-	              ui.displayString(nameOfProperty);
-	              
-	              int i = 0;
-	              int j;
-	              
-	              while(!found && i < PROPERTY_SHORT_NAMES.length)
-	              {
-	                if(nameOfProperty.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i]))
-	                {
-	                  found = true;
-	                }
-	                i++;
-	              }
-	              
-	              
-	              if(found)
-	              {
-	                boolean ownerOfProperty = false;
-	                for(j = 0; j < person.assets.size() && !ownerOfProperty; j++)
-	                {
-	                  if(nameOfProperty.equalsIgnoreCase(person.assets.get(j).getName()))
-	                  {
-	                    ownerOfProperty = true;
-	                    break;
-	                  }
-	                }
-	                
-	                if(ownerOfProperty && person.assets.get(j).getType()==1)
-	                {
-	                  Site property = (Site) person.assets.get(j);
-	                  if(person.Monopoly(property.getColour()))
-	                  {
-	                    int numOfhotelsTodemolish = 0;
-	                    if(property.getHotels()!=0){
-	                    	
-	                    do{
-	                    	 ui.displayString("This property has " + property.getHotels() + " hotels");
-	                      ui.displayString("Please specify the number of hotels you want to demolish, you can't demolish more than 2");
-	                      String hotelsTodemolish = ui.getCommand();
-	                      ui.displayString(hotelsTodemolish);
-	                      numOfhotelsTodemolish = Integer.parseInt(hotelsTodemolish);
-	                      property.demolishHouse(numOfhotelsTodemolish, property.getOwner());
-	                    }while((numOfhotelsTodemolish < 1 || numOfhotelsTodemolish > 2) && property.getHotels()>0);
-	                    
-	                    
-	                    
-	                    ui.displayString("Your " + numOfhotelsTodemolish + " hotels have been demolished.");
-	                    	
-	                    } else{
-	                    	ui.displayString("You have to no hotels");
-	                    }
-	                  } else{
-	                	  ui.displayString("You don't have a monopoly on that color group");
-	                  }
-	                } else{
-	                	 ui.displayString("You can only demolish on a site and it has to be yours ");
-	                }
-	              } 
-			}
-			
-			//This get the name of the property from the user, checks if such a property exists, checks if the current player
-			//is the owner then lets them demolish
-			if(command.equals("demolish house")){
-				ui.displayString("Enter the name of the property you want to demolish a house on");
-	              
-	              boolean found = false;
-	              
-	              String nameOfProperty = ui.getCommand();
-	              ui.displayString(nameOfProperty);
-	              
-	              int i = 0;
-	              int j;
-	              
-	              while(!found && i < PROPERTY_SHORT_NAMES.length)
-	              {
-	                if(nameOfProperty.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i]))
-	                {
-	                  found = true;
-	                }
-	                i++;
-	              }
-	              
-	              
-	              if(found)
-	              {
-	                boolean ownerOfProperty = false;
-	                for(j = 0; j < person.assets.size() && !ownerOfProperty; j++)
-	                {
-	                  if(nameOfProperty.equalsIgnoreCase(person.assets.get(j).getName()))
-	                  {
-	                    ownerOfProperty = true;
-	                    break;
-	                  }
-	                }
-	                
-	                if(ownerOfProperty && person.assets.get(j).getType()==1)
-	                {
-	                  Site property = (Site) person.assets.get(j);
-	                  if(person.Monopoly(property.getColour()))
-	                  {
-	                    int numOfHousesTodemolish = 0;
-	                    if(property.getHotels()!=0){
-	                    	if(property.getHouses()!=0){
-	                    do{
-	                    	 ui.displayString("This property has " + property.getHouses() + " houses");
-	                      ui.displayString("Please specify the number of houses you want to demolish, you can't demolish more than 4");
-	                      String housesTodemolish = ui.getCommand();
-	                      ui.displayString(housesTodemolish);
-	                      numOfHousesTodemolish = Integer.parseInt(housesTodemolish);
-	                      property.demolishHouse(numOfHousesTodemolish, property.getOwner());
-	                    }while((numOfHousesTodemolish < 1 || numOfHousesTodemolish > 4) && property.getHouses()>0);
-	                    
-	                    
-	                    
-	                    ui.displayString("Your " + numOfHousesTodemolish + " houses have been demolished.");
-	                    	} else{
-	                    		ui.displayString("You have no houses");
-	                    	}
-	                    } else{
-	                    	ui.displayString("You have to demolish hotels first");
-	                    }
-	                  } else{
-	                	  ui.displayString("You don't have a monopoly on that color group");
-	                  }
-	                } else{
-	                	 ui.displayString("You can only demolish on a site and it has to be yours ");
-	                }
-	              } 
+			if(command.equals("demolish")){
+				processDemolish (person);
 			}
 
 			//This get the name of the property from the user, checks if such a property exists, checks if the current player
 			//is the owner then lets them redeem
 			if(command.equals("redeem")){
-				ui.displayString("Enter the name of the property you want redeem");
-				boolean found = false;
-				String name = ui.getCommand();
-				ui.displayString(name);
-				
-				int i =0;
-				int j;
-				while(!found && i<PROPERTY_SHORT_NAMES.length){
-					if(name.equalsIgnoreCase(PROPERTY_SHORT_NAMES[i])){
-						found = true;
-					}
-					i++;
-				}
-				
-				if(found){
-					boolean own_property = false;
-					for(j = 0; j<person.assets.size() && !own_property; j++){
-						if(name.equalsIgnoreCase(person.assets.get(j).getName())){
-							own_property = true;
-							break;
-						}
-					}
-					
-					if(own_property){				
-						Property property = person.assets.get(j);
-						
-						if(property.isMortgaged()){
-						person.redeem(property);
-						ui.displayString(property.getName() + " has been redeemed");
-						}
-						
-						else{
-							ui.displayString("This hasn't been mortgaged so you can't redeem it");
-						}
-											
-					}
-					
-					else{
-						ui.displayString("You don't own this property");
-					}
-				}
-				
-				
-				else{
-					ui.displayString("You didn't enter a property name, please type 'property' to see your property names");
-				}
-
+				processRedeem(person);
 			}
 
 			if(command.equals("help")){
@@ -810,35 +664,29 @@ public class Monopoly {
 			}
 
 			if(command.equals("property")){
-				ui.displayString(person.getProperties());
+				ui.displayAssets(person);
 			}
+	
 			
-			if( (board.squareType(person.getPosition()) == 1) || (board.squareType(person.getPosition()) == 2) || (board.squareType(person.getPosition()) == 3) )
-			{
-			if(!paid && !board.getProperty(person.getPosition()).getOwner().equals(person)){
-				ui.displayString("You must declare  bankruptcy");
-				
-				do{
-					ui.displayString("You must declare  bankruptcy, please type 'bankrupt' ");
-					System.out.println("here");
-					command = ui.getCommand();
-					ui.displayString(command);
-				}while(!command.equals("bankrupt") );
-			}
-			}
 			
 			if(command.equals("bankrupt")){
-				ui.displayString("You are out");
-
-				for(int i =0; i<person.assets.size();i++){
-					person.assets.get(i).free();
+				processBankrupt(person, token.get(person_number));
+				command = "done";
+			}
+			
+			if(command.equals("cheat")){
+				processCheat(person);
+			}
+			
+			if(command.equals("done")){
+				if(person.isBankrupt()){
+					command = balanceCheck(person);
 				}
-				command = "quit";
 			}
 
 			//Displays message for invalid commands
-			if(!(command.equalsIgnoreCase("demolish hotel")) &&!(command.equalsIgnoreCase("demolish house")) 
-					&&!(command.equalsIgnoreCase("build hotel")) &&!(command.equalsIgnoreCase("build house")) 
+			if(!(command.equalsIgnoreCase("cheat"))&&!(command.equalsIgnoreCase("demolish")) 
+					 &&!(command.equalsIgnoreCase("build")) 
 					&&!(command.equals("bankrupt")) &&!(command.equals("redeem")) &&!(command.equals("mortgage")) 
 					&&!(command.equals("property")) && !(command.equals("balance")) 
 					&& !(command.equals("help")) && !(command.equals("pay rent"))
@@ -846,10 +694,8 @@ public class Monopoly {
 				ui.displayString("Invalid command, type 'help' for help");
 			}
 
-
-
-
-		}while((!command.equals("done") && !command.equals("quit")));
+			
+		}while((!command.equals("done") && !command.equals("quit")) &&!gameover);
 	}
 
 
@@ -861,7 +707,7 @@ public class Monopoly {
 
 		//Find position of token
 		for(int i =0;i<locations.length;i++){
-			if((locations[i].x== token[person].getX()) && (locations[i].y== token[person].getY())){
+			if((locations[i].x== token.get(person).getX()) && (locations[i].y== token.get(person).getY())){
 				position = i;
 			}
 		}
@@ -876,7 +722,7 @@ public class Monopoly {
 					position = position%locations.length;
 				}
 
-				token[person].setPosition(locations[position].x, locations[position].y);
+				token.get(person).setPosition(locations[position].x, locations[position].y);
 
 				position++;
 
@@ -901,7 +747,7 @@ public class Monopoly {
 
 				}
 
-				token[person].setPosition(locations[position].x, locations[position].y);
+				token.get(person).setPosition(locations[position].x, locations[position].y);
 
 				ui.getBoardPanel().repaint();
 
