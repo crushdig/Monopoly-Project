@@ -1,0 +1,20 @@
+//Enforces payment of Tax
+      if(board.squareType(person.getPosition()) == 9)
+      {
+        ui.displayString("You need to pay tax.");
+        
+        processTax(person, paid);
+        
+        paid = true;
+      }
+      
+  public void processTax(Player p, boolean paid)
+  {
+    Player person = p;
+    
+    Tax payTax = board.getTax(person.getPosition());
+    person.payRent(payTax.getTaxAmount());
+    ui.displayString(person.getName() + " has just paid "
+        + board.getTax(person.getPosition()).getName());
+    paid = true;
+  }
