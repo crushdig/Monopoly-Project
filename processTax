@@ -18,3 +18,9 @@
         + board.getTax(person.getPosition()).getName());
     paid = true;
   }
+
+//Board class
+public Tax getTax(int position)
+  {
+    return (Tax) squares.get(position);
+  }
