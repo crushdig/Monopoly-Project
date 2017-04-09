@@ -6,8 +6,7 @@ public class Site extends Property{
 	private String color;
 	private int house_price;
 	private final int hotel_price = 250;
-	private int houses;
-	private int hotels;
+	
 	private ColourGroup[] SITE_COLORS ={new ColourGroup("brown"),new ColourGroup("light blue"),new ColourGroup("pink"),
 			 new ColourGroup("orange"),new ColourGroup("red"),new ColourGroup("yellow"),
 			 new ColourGroup("green"),new ColourGroup("dark blue")};
@@ -21,8 +20,7 @@ public class Site extends Property{
 		super(value, name, type, rent, mortgage_value);
 		this.colourGroup = SITE_COLORS[colorGroup];
 		this.color = this.colourGroup.getName();
-		houses = 0;
-		hotels = 0;
+		
 		this.house_price = house_price;
 		numBuildings = 0;
 		colourGroup.addMember(this);
@@ -76,33 +74,28 @@ public class Site extends Property{
 	  return color;
 	}
 	
-	public int getHouses(){
-		return houses;
-	}
 	
-	public int getHotels(){
+	public int getNumHotels () {
+		int hotels = 0;
+		
+		if(numBuildings==5){
+			hotels = numBuildings%4;
+		}
+		
 		return hotels;
 	}
 	
-	public void buildHouse(int number_of_houses, Player person){
-		houses += number_of_houses;
-		person.payRent(number_of_houses * house_price);
+	public int getNumHouses(){
+		int houses = 0;
+		if(numBuildings>4){
+			houses= 4;
+		}
+		else{
+			houses = numBuildings;
+		}
+		return houses;
 	}
 	
-	public void buildHotel(int number_of_hotels,  Player person){
-		hotels += number_of_hotels;
-		person.payRent(number_of_hotels * hotel_price);
-	}
-	
-	public void demolishHotel(int number_of_hotels ,  Player person){
-		houses -= number_of_hotels;
-		person.getRent(number_of_hotels * hotel_price * 0.5);
-	}
-	
-	public void demolishHouse(int number_of_houses ,  Player person){
-		houses -= number_of_houses;
-		person.getRent(number_of_houses * (hotel_price * 0.5));
-	}
 	
 	public int getHotelPrice(){
 		return hotel_price;

@@ -142,7 +142,7 @@ public class Board {
 				squares.add(new Square(COMMUNITY_NAME, SQUARE_TYPES[i]));
 				break;
 			case 5:
-				squares.add(new Square(CHANCE_NAME, SQUARE_TYPES[i]));
+				squares.add(new Chance(CHANCE_NAME, SQUARE_TYPES[i]));
 				break;
 			case 6:
 				squares.add(new Square(JAIL_NAME, SQUARE_TYPES[i]));
@@ -179,6 +179,10 @@ public class Board {
 	//Returns the type of the square
 	public int squareType(int position){
 		return squares.get(position).getType();
+	}
+	
+	public Square getSquare(int position){
+		return squares.get(position);
 	}
 	
 	//Returns the property on the square at this position
