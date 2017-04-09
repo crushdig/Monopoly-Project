@@ -7,6 +7,7 @@ public class Player {
 	private String name;
 	private double balance;
 	boolean bankrupt = false;
+	Token token;
 	private int position;
 	ArrayList<Property> assets;//Stores the players assets
 
@@ -15,10 +16,19 @@ public class Player {
 		this.balance = 1500;
 		this.position = 0;
 		this.assets = new ArrayList<Property>();
+		this.token = new Token();
 	}
 
 	Player (Player player) {   // copy constructor
 		this(player.getName());
+	}
+	
+	public void setToken(Token token){
+		this.token = token;
+	}
+	
+	public Token getToken(){
+		return this.token;
 	}
 	
 	public String getName(){
@@ -34,6 +44,13 @@ public class Player {
 	
 	public void move(int position){
 		this.position = position;
+	}
+	
+	public void move(){
+		position++;
+		if((position)>=40){
+			position = position%40;
+		}
 	}
 
 	public int getPosition(){
@@ -140,6 +157,27 @@ public class Player {
 			}
 		}
 		return true;
+	}
+	
+	public int numberOfHouses(){
+		int houses = 0;
+		for (Property p : assets) {
+			if (p instanceof Site) {
+				if(((Site) p).getNumBuildings()<=4)
+				houses += ((Site) p).getNumHouses();
+			}
+		}
+		return houses;
+	}
+	
+	public int numberOfHotels(){
+		int hotels = 0;
+		for (Property p : assets) {
+			if (p instanceof Site) {
+				hotels += ((Site) p).getNumHotels();
+			}
+		}
+		return hotels;
 	}
 	
 	//for the cheat

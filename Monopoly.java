@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 public class Monopoly {
 	private int players;
-	private ArrayList<Token>  token;
+
 	private Player currPlayer;
 	int diceroll = 0;
 
@@ -90,8 +90,7 @@ public class Monopoly {
 			this.players = Integer.parseInt(players);
 		}while((this.players<2) || (this.players>6));
 
-	//	token = new Token[this.players];
-		token = new ArrayList<Token>();
+		
 
 		String name;
 
@@ -107,7 +106,7 @@ public class Monopoly {
 		
 
 
-		ui= new UI(token, player.size());
+		ui= new UI(player);
 
 
 
@@ -189,8 +188,8 @@ public class Monopoly {
 				temp = getNextPlayer(temp);
 				i++;
 			}
-			if(i>=token.size()){
-				i %= token.size();
+			if(i>=player.size()){
+				i %= player.size();
 			}
 			
 		} while (!gameover);
@@ -273,27 +272,17 @@ public class Monopoly {
 		return nextPlayer;
 	}
 	
-	public Token getNextToken (Token t) {
-		Token nextToken;
-		int i=0;
-		for (i=0;i<token.size();i++) {
-			if(token.get(i) == t){
-				break;
-			}
-		}
-		nextToken = token.get(((i+1)%token.size()));
-		return nextToken;
-	}
 	
-	public void processBankrupt (Player p, Token t) {
+	public void processBankrupt (Player p) {
 		ui.displayBankrupt(p);
 		Player tempPlayer = getNextPlayer(p);
-		Token tempToken = getNextToken(t);
+		
+		p.getToken().transparent();
 		player.remove(p);
-		t.transparent();
-		token.remove(t);
+		
+		
 		p = tempPlayer;
-		t = tempToken;
+		
 		if (player.size()==1) {
 			gameover = true;
 		}
@@ -305,13 +294,13 @@ public class Monopoly {
 		String command = "";
 		int cheat = 0;
 		do{
-		ui.displayString("Which cheat do you want? Type 1 for the property cheat or 2 for the bankrupt cheat");
+		ui.displayString("Which cheat do you want? Type 1 for the property cheat or 2 for the bankrupt cheat or 3 for Chance cheat");
 		
 		command = ui.getCommand();
 		ui.displayString(command);
 		
 
-		}while(!command.equalsIgnoreCase("1") && !command.equalsIgnoreCase("2"));
+		}while(!command.equalsIgnoreCase("1") && !command.equalsIgnoreCase("2") && !command.equalsIgnoreCase("3"));
 		
 		cheat = Integer.parseInt(command);
 		
@@ -325,9 +314,17 @@ public class Monopoly {
 			case 2 :	   // make zero balance
 				p.payRent((int)p.getbalance()*2);
 				break;
+				
+			case 3:
+				p.move(7);
+				
+				ui.getBoardPanel().repaint();
+				break;
+			
 		}
 		return;
 	}
+	
 	
 	private void processBuild (Player p) {
 		Property property = getInputProperty();
@@ -573,11 +570,11 @@ public class Monopoly {
 					}while(dice == dice1);
 				}
 				diceroll = dice + dice1;
-
+				int chance = 7;
 				rolled = true;
 				ui.displayString("you rolled a " +(dice + dice1));
-				moveToken((dice + dice1),person_number);
-				movePerson((dice + dice1),person);
+				moveToken(chance, person);
+				movePerson(chance,person);
 			}
 		}while(!rolled);
 
@@ -589,7 +586,16 @@ public class Monopoly {
 				balanceCheck(person);				
 			}
 			
+			
 			else{
+				
+				if(board.squareType(person.getPosition())==5){
+					Chance chance = (Chance) board.getSquare(person.getPosition());
+					//chance.advanceToLocation(person, person_number, "Advance to Go.", this);
+					chance.processCard(person, this, "Advance to Trafalgar Square. If you pass Go collect £200.");
+					
+				}
+				
 			ui.displayString("Please enter a command");
 			command = ui.getCommand();
 			ui.displayString(command);
@@ -620,6 +626,7 @@ public class Monopoly {
 				}
 			}
 
+			
 
 
 			if(command.equals("buy")){
@@ -670,12 +677,13 @@ public class Monopoly {
 			
 			
 			if(command.equals("bankrupt")){
-				processBankrupt(person, token.get(person_number));
+				processBankrupt(person);
 				command = "done";
 			}
 			
 			if(command.equals("cheat")){
 				processCheat(person);
+				
 			}
 			
 			if(command.equals("done")){
@@ -698,16 +706,22 @@ public class Monopoly {
 		}while((!command.equals("done") && !command.equals("quit")) &&!gameover);
 	}
 
+	public Board getBoard(){
+		return board;
+	}
+	
+	public UI getUI(){
+		return ui;
+	}
 
-
-	private void moveToken(int m, int person) throws InterruptedException {
+	public void moveToken(int m, Player p) throws InterruptedException {
 
 		int  j, offset, position=0;
 		offset = 0;
 
 		//Find position of token
 		for(int i =0;i<locations.length;i++){
-			if((locations[i].x== token.get(person).getX()) && (locations[i].y== token.get(person).getY())){
+			if((locations[i].x== p.getToken().getX()) && (locations[i].y== p.getToken().getY())){
 				position = i;
 			}
 		}
@@ -722,7 +736,7 @@ public class Monopoly {
 					position = position%locations.length;
 				}
 
-				token.get(person).setPosition(locations[position].x, locations[position].y);
+				p.getToken().setPosition(locations[position].x, locations[position].y);
 
 				position++;
 
@@ -739,7 +753,7 @@ public class Monopoly {
 		else
 		{
 			for (j = 0; j < m; j++) {
-
+		
 				position++;
 
 				if((position)>=locations.length){
@@ -747,7 +761,14 @@ public class Monopoly {
 
 				}
 
-				token.get(person).setPosition(locations[position].x, locations[position].y);
+				p.getToken().setPosition(locations[position].x, locations[position].y);
+				
+				
+				if(j == m - 1){
+				System.out.println(position);	
+				System.out.println(locations[position].x);
+				System.out.println(locations[position].y);
+				}
 
 				ui.getBoardPanel().repaint();
 
@@ -763,6 +784,8 @@ public class Monopoly {
 		ui.getBoardPanel().repaint();
 
 	}
+	
+	
 
 
 

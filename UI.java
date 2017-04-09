@@ -53,9 +53,9 @@ public class UI {
 	private BoardPanel boardPanel;
 	private InfoPanel infoPanel;
 	
-	public UI(ArrayList<Token> tokens, int numberOfTokens){
+	public UI(ArrayList<Player> players){
 		
-		boardPanel = new BoardPanel(tokens, numberOfTokens);
+		boardPanel = new BoardPanel(players);
 		infoPanel = boardPanel.getIpanel();
 		
 		return;
