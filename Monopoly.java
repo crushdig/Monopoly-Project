@@ -104,11 +104,6 @@ public class Monopoly {
 
     ui = new UI(player);
 
-
-
-    return;
-
-
   }
 
   // Takes in the ArrayList of players and returns the person that goes first
@@ -205,8 +200,6 @@ public class Monopoly {
 
 
     ui.displayGameOver();
-
-    return;
   }
 
   private void showProperties() {
@@ -548,19 +541,115 @@ public class Monopoly {
     } while (!command.equalsIgnoreCase("bankrupt"));
     return command;
   }
+  
+  
+  
+  public void processJail(Player person, int jailCount) throws InterruptedException{
+    String command;
+    
+    if(jailCount==3){
+      ui.displayString("You have been in jail for 3 turns and have to pay");
+      processJailPay(person);
+    }
+    
+    else{
+    ui.displayString("Do you wish to get out of jail?");
+   
+    command = ui.getCommand();
+    ui.displayString(command);
+
+    do {
+      if ((command.equalsIgnoreCase("Yes"))) {
+        ui.displayString("How would you like to leave jail?");
+        ui.displayString("You can only use the commands 'pay bail' to pay bail, 'roll' to try for a double and 'card' to use your jailcard");
+        command = ui.getCommand();
+        ui.displayString(command);
+
+        if (command.equalsIgnoreCase("Pay bail")  && (!person.isBankrupt())) {
+          processJailPay(person);
+        }
+
+       if (command.equalsIgnoreCase("Roll")) {
+          processJailRoll(person);
+        }
+       
+       if (command.equalsIgnoreCase("card")) {
+         processGetOutOfJailCard(person);
+       }
+       
+       if (!(command.equalsIgnoreCase("card")) && !(command.equalsIgnoreCase("pay bail"))
+           && !(command.equals("roll"))) {
+         ui.displayString("Invalid command");
+       }
+       
+      }
+      
+
+    } while ((person.getJail()) && (!command.equalsIgnoreCase("No")));
+
+    }
+    
+  }
+  
+  public void processJailPay(Player p) throws InterruptedException{
+    ui.displayString("You paid: " + p.payBail(50) + " to get out of jail");
+    processRoll(p);
+  }
+  
+  public void processJailRoll(Player p) throws InterruptedException{
+    int dice = die[0].roll();
+    int dice1 = die[1].roll();
+
+  
+    ui.displayString("you rolled a " + (dice + dice1));
+
+    if (dice == dice1) {
+      p.setJail(false);
+      ui.displayString("Great! You rolled doubles! Feel free to leave");
+      moveToken((dice + dice1), p);
+      movePerson((dice + dice1), p);
+    }
+    
+    else{
+      ui.displayString("Sorry you're still in jail as you didn't roll doubles");
+    }
+
+  }
+  
+  public void processGetOutOfJailCard(Player p){
+    if(p.hasJailCard()){
+      p.useJailCard();
+      ui.displayString("You've used your card to get out of jail");
+    }
+    else{
+      ui.displayString("You have no get out of jail card");
+    }
+  }
+  
+  public void processRoll(Player person) throws InterruptedException{
+    int dice = die[0].roll();
+    int dice1 = die[1].roll();
+
+    
+    diceroll = dice + dice1;
+   
+    
+    ui.displayString("you rolled a " + (dice + dice1));
+    moveToken(diceroll, person);
+    movePerson(diceroll, person);
+  }
 
   // Function contains all the actions a player can perform in their turn
   public void turn(Player person, int person_number) throws InterruptedException {
     String command = "";
     boolean rolled = false;
     boolean paid = false;
-
-
+    
 
     ui.displayString(person.getName() + "'s turn");
 
 
-
+    if(!person.getJail()){
     do {
       ui.displayString("Please roll");
       command = ui.getCommand();
@@ -575,21 +664,21 @@ public class Monopoly {
           do {
             ui.displayString("You rolled doubles! Please roll again");
             command = ui.getCommand();
-            if (command.equals("roll")) {
+            if (command.equalsIgnoreCase("roll")) {
               dice = die[0].roll();
               dice1 = die[1].roll();
             }
           } while (dice == dice1);
         }
         diceroll = dice + dice1;
-        int chance = 7;
+        int jail1 = 30;
         rolled = true;
         ui.displayString("you rolled a " + (dice + dice1));
-        moveToken(chance, person);
-        movePerson(chance, person);
+        moveToken(jail1, person);
+        movePerson(jail1, person);
       }
     } while (!rolled);
-
+    }
 
 
     do {
@@ -601,17 +690,43 @@ public class Monopoly {
 
       else {
 
+        if (board.squareType(person.getPosition()) == 8) {
+
+          person.getToken().setPosition(60, 643);
+          person.move(10);
+
+          person.setJail(true);
+
+          }
+        
+        if ((board.squareType(person.getPosition()) == 6) && (person.getJail())) {
+          ui.displayString(person.getName() + ", you have been placed in jail.");
+        }
+
+        
+    
+        
+        
         if (board.squareType(person.getPosition()) == 5) {
           Chance chance = (Chance) board.getSquare(person.getPosition());
           // chance.advanceToLocation(person, person_number, "Advance to Go.", this);
           chance.processCard(person, this,
-              "Advance to Trafalgar Square. If you pass Go collect Â£200.");
-
+              "Advance to Trafalgar Square. If you pass Go collect £200.");
         }
+        
+        
+        if(person.getJail()){
+          person.increaseJailCount();
+          processJail(person, person.getJailCount());
+          command = "";
+        }
+        
+        else{
 
         ui.displayString("Please enter a command");
         command = ui.getCommand();
         ui.displayString(command);
+        }
       }
 
       if (command.equals("roll")) {
@@ -707,6 +822,10 @@ public class Monopoly {
         processCheat(person);
 
       }
+      
+      if(person.getJail()){
+        command = "done";
+      }
 
       if (command.equals("done")) {
         if (person.isBankrupt()) {
@@ -765,7 +884,7 @@ public class Monopoly {
 
         // controls the movement speed of the tokens across the board allowing for easy detection of
         // their movement
-        Thread.sleep(300);
+        Thread.sleep(100);
 
       }
     }

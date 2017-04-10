@@ -7,9 +7,11 @@ public class Player {
 
   private String name;
   private double balance;
-  boolean bankrupt = false;
-  boolean inJail = false;
-  Token token;
+  private boolean bankrupt = false;
+  private boolean inJail = false;
+  private Token token;
+  private int jailCard = 1;
+  private int jailCount =0;
   private int position;
   ArrayList<Property> assets;// Stores the players assets
 
@@ -29,9 +31,31 @@ public class Player {
     this.token = token;
   }
   
-  public void setJail()
+  public void increaseJailCount(){
+    jailCount++;
+  }
+  
+  public int getJailCount(){
+    return jailCount;
+  }
+  
+  public boolean hasJailCard(){
+     return jailCard==0;
+  }
+  
+  public void addJailCard(){
+    jailCard++;
+  }
+  
+  public void useJailCard(){
+    jailCard--;
+    setJail(false);
+  }
+  
+  public void setJail(boolean status)
   {
-    inJail =  true;
+    inJail =  status;
+    jailCount = 0;
   }
   
   public boolean getJail()
@@ -72,6 +96,7 @@ public class Player {
   public int payBail(int bail)
   {
     balance = balance - bail;
+    inJail = false;
     return bail;
   }
   
