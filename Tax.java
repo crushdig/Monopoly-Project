@@ -1,5 +1,3 @@
-package sprint_Four;
-
 public class Tax extends Square {
   
   private String nameOfTaxSite;

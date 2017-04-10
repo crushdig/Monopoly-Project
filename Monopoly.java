@@ -580,7 +580,7 @@ public class Monopoly {
 		String command = "";
 		Chance chance = new Chance("Chance", 6);
 		do{
-		ui.displayString("You can either collect a chance card or pay a fine, type 'chance' for chance or 'fine' to pay Â£10 fine" );
+		ui.displayString("You can either collect a chance card or pay a fine, type 'chance' for chance or 'fine' to pay £10 fine" );
 		
 		command = ui.getCommand();
 		ui.displayString(command);
