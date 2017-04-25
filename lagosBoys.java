@@ -1,0 +1,486 @@
+import java.util.ArrayList;
+
+public class lagosBoys implements Bot {
+
+	// The public API of YourTeamName must not change
+	// You cannot change any other classes
+	// YourTeamName may not alter the state of the board or the player objects
+	// It may only inspect the state of the board and the player objects
+
+	private BoardAPI board;
+	private PlayerAPI player;
+	private DiceAPI dice;
+	private String command;
+	private boolean checkForMonopoly = false;
+	private boolean rolled = false;
+	private int numberOfTimesGoneRound = 0;
+	private int jailCount = 0;
+	boolean bankrupt = false;
+
+	ArrayList<ColourGroup> frequentlyLandedOn = new ArrayList<ColourGroup>();
+
+	lagosBoys (BoardAPI board, PlayerAPI player, DiceAPI dice) {
+		this.board = board;
+		this.player = player;
+		this.dice = dice;
+		frequentlyLandedOn.add(new ColourGroup("pink"));
+		frequentlyLandedOn.add(new ColourGroup("orange"));
+		frequentlyLandedOn.add(new ColourGroup("red"));
+		frequentlyLandedOn.add(new ColourGroup("yellow"));
+		frequentlyLandedOn.add(new ColourGroup("green"));
+		return;
+	}
+
+	public String getName () {
+		return "lagosBoys";
+	}
+
+	public String getCommand () {
+
+		ArrayList<Site> playerSites = new ArrayList<Site>();
+		ArrayList<Site> sitesWithMonopoly = new ArrayList<Site>();
+		ArrayList<Station> playerStations = new ArrayList<Station>();
+		ArrayList<Utility> playerUtilities = new ArrayList<Utility>();
+		ArrayList<Property> mortgagedProperties = new ArrayList<Property>();
+
+
+		if(numberOfTimesGoneRound<=4){
+
+			if(player.getBalance() < 0){
+
+				bankrupt = true;
+				for (Property property: player.getProperties()) {
+
+
+					if(property instanceof Site){
+						playerSites.add((Site) property);
+					}
+
+					if(property instanceof Station){
+						playerStations.add((Station) property);
+					}
+
+					if(property instanceof Utility){
+						playerUtilities.add((Utility) property);
+					}
+
+				}
+
+
+
+				for (Utility utility: playerUtilities) {
+
+					if(!utility.isMortgaged()){
+						command = "mortgage";
+						return command + " " + utility.getShortName();
+					}
+					if(player.getBalance()>100) break;
+				}
+
+
+
+				if(player.getBalance() < 0 || player.getBalance()<100){
+
+					for (Site site: playerSites) {
+
+						if(!site.isMortgaged() && !isFrequentlyLandedOn(site)){
+
+							while(site.canDemolish(1) && player.getBalance()<100){
+								command = "demolish";
+								return command + " " + site.getShortName() + " " + 1; 
+							}
+
+							if(player.getBalance()>100) break;
+
+							command = "mortgage";
+							return command + " " + site.getShortName();
+						}
+
+					}
+
+				}
+
+
+				if(player.getBalance() < 0 || player.getBalance()<100){
+
+					for (Site site: playerSites) {
+						if(!site.isMortgaged()){
+
+							while(site.canDemolish(1) && player.getBalance()<100){
+								command = "demolish";
+								return command + " " + site.getShortName() + " " + 1; 
+							}
+
+							if(player.getBalance()>100) break;
+
+							command = "mortgage";
+							return command + " " + site.getShortName();
+						}
+					}
+
+				}
+
+
+				if(player.getBalance() < 0){
+
+					for (Station station: playerStations) {
+
+						if(!station.isMortgaged() && player.getBalance()<100){
+							command = "mortgage";
+							return command + " " + station.getShortName();
+
+						}
+						if(player.getBalance()>100) break;
+					}
+
+				}
+
+
+
+			}
+
+
+			if(!rolled){
+				command = "roll";
+				rolled = true;
+				return command;
+			}
+
+			if( (board.getSquare(player.getPosition()) instanceof Property) && !board.getProperty(player.getPosition()).isOwned() ){
+
+				if( player.getBalance() - board.getProperty(player.getPosition()).getPrice() > 100){
+
+					command = "buy";
+					return command;
+
+				}
+			}
+
+
+			if(player.passedGo()) numberOfTimesGoneRound++;
+
+
+			if(player.isInJail()){
+				if(player.hasGetOutOfJailCard()){
+					command = "card";
+					return command;
+				}
+
+				else if(player.getBalance() - 50 > 200){
+					command = "pay";
+					return command;
+				}
+				else{
+					if(!rolled){
+						command = "roll";
+						rolled = true;
+						
+						return command;
+					}
+				}
+			}
+
+
+			if(player.isInJail() && rolled){
+
+				command = "done";
+				rolled = false;
+				return command;
+
+			}
+
+			
+			
+			
+			for (Property property: player.getProperties()) {
+
+				if(!property.isMortgaged()){
+					bankrupt = false;
+					break;
+				}
+			}
+
+			if(bankrupt){
+				command = "bankrupt";
+				return command;
+			}
+
+			if(rolled){
+				command = "done";
+				rolled = false;
+				return command;
+			}
+
+
+		}
+
+		else{
+
+			if(player.getBalance() < 0){
+
+				bankrupt = true;
+				for (Property property: player.getProperties()) {
+
+
+					if(property instanceof Site){
+						playerSites.add((Site) property);
+					}
+
+					if(property instanceof Station){
+						playerStations.add((Station) property);
+					}
+
+					if(property instanceof Utility){
+						playerUtilities.add((Utility) property);
+					}
+
+				}
+
+
+
+				for (Utility utility: playerUtilities) {
+
+					if(!utility.isMortgaged()){
+						command = "mortgage";
+						return command + " " + utility.getShortName();
+					}
+					if(player.getBalance()>100) break;
+				}
+
+
+
+				if(player.getBalance() < 0 || player.getBalance()<100){
+
+					for (Site site: playerSites) {
+
+						if(!site.isMortgaged() && !isFrequentlyLandedOn(site)){
+
+							while(site.canDemolish(1) && player.getBalance()<100){
+								command = "demolish";
+								return command + " " + site.getShortName() + " " + 1; 
+							}
+
+							if(player.getBalance()>100) break;
+
+							command = "mortgage";
+							return command + " " + site.getShortName();
+						}
+
+					}
+
+				}
+
+
+				if(player.getBalance() < 0 || player.getBalance()<100){
+
+					for (Site site: playerSites) {
+						if(!site.isMortgaged()){
+
+							while(site.canDemolish(1) && player.getBalance()<100){
+								command = "demolish";
+								return command + " " + site.getShortName() + " " + 1; 
+							}
+
+							if(player.getBalance()>100) break;
+
+							command = "mortgage";
+							return command + " " + site.getShortName();
+						}
+					}
+
+				}
+
+
+				if(player.getBalance() < 0){
+
+					for (Station station: playerStations) {
+
+						if(!station.isMortgaged() && player.getBalance()<100){
+							command = "mortgage";
+							return command + " " + station.getShortName();
+
+						}
+						if(player.getBalance()>100) break;
+					}
+
+				}
+
+			}
+
+
+
+			if(!rolled){
+				command = "roll";
+				rolled = true;
+				return command;
+			}
+
+			if( (board.getSquare(player.getPosition()) instanceof Property) && !board.getProperty(player.getPosition()).isOwned() ){
+
+				if( player.getBalance() - board.getProperty(player.getPosition()).getPrice() > 100){
+
+					command = "buy";
+					return command;
+
+				}
+			}
+
+
+			if(player.passedGo()) numberOfTimesGoneRound++;
+
+			if(player.isInJail() && player.hasGetOutOfJailCard()  && jailCount ==1){
+				command = "card";
+				return command;
+			}
+
+			if(player.isInJail()){
+
+				if(!rolled){
+					command = "roll";
+					rolled = true;
+					jailCount++;
+					
+					return command;
+				}
+
+			}
+
+			if(!player.isInJail()){
+				jailCount=0;
+			}
+
+
+			for (Property property: player.getProperties()) {
+
+				if(property instanceof Site){
+
+					if(player.isGroupOwner((Site) property)){
+						checkForMonopoly = true;
+						sitesWithMonopoly.add((Site) property);
+					}
+
+				}
+			}
+
+			if(checkForMonopoly){
+
+
+				int propertiesBuiltOn = 0;
+				for (Site site: sitesWithMonopoly) {
+
+					if(isFrequentlyLandedOn(site)){
+						while(site.canBuild(1) && (player.getBalance()-site.getBuildingPrice())>500){
+							command = "build";						
+							return command + " " + site.getShortName() + " " + 1; 
+						}
+						propertiesBuiltOn++;
+					}
+
+				}
+
+				if(propertiesBuiltOn<sitesWithMonopoly.size() ){
+					for (Site site: sitesWithMonopoly) {
+						if(!isFrequentlyLandedOn(site)){
+							while(site.canBuild(1) && (player.getBalance()-site.getBuildingPrice())>500){
+								command = "build";
+								return command + " " + site.getShortName() + " " + 1; 
+							}
+						}
+					}
+				}
+
+			}
+
+			boolean mortgagedProperty = false;
+			for (Property property: player.getProperties()) {
+				if(property.isMortgaged()){
+
+					mortgagedProperties.add(property);
+					mortgagedProperty = true;
+
+				}
+			}
+
+			if(mortgagedProperty){
+
+				for (Property property: mortgagedProperties) {
+
+					if(player.getBalance() - property.getMortgageRemptionPrice()>200){
+
+						command = "redeem";
+						return command + " " + property.getShortName();
+
+					}
+
+				}
+
+			}
+
+
+			if(player.isInJail() && rolled){
+
+				command = "done";
+				rolled = false;
+				return command;
+
+			}
+
+
+
+			for (Property property: player.getProperties()) {
+
+				if(!property.isMortgaged()){
+					bankrupt = false;
+					break;
+				}
+			}
+			
+			if(bankrupt){
+				command = "bankrupt";
+				return command;
+			}
+
+			if(rolled){
+				command = "done";
+				rolled = false;
+				return command;
+			}
+
+
+		}
+
+
+		// Add your code here
+		return command;
+	}
+
+	public boolean isFrequentlyLandedOn(Site site) {
+
+		boolean answer = false;
+
+		for (ColourGroup Colorgroup: frequentlyLandedOn) {
+
+			if(site.getColourGroup().getName().equals(Colorgroup.getName())){
+				answer = true;
+				return answer;
+			}
+
+		}
+
+
+		return answer;
+	}
+
+	public String getDecision () {
+		// Add your code here
+		String decision = "chance";
+
+		if(player.getNumHousesOwned()>1 || player.getNumHotelsOwned()>0){
+			decision = "pay";
+		}
+
+		return decision;
+	}
+
+
+}
