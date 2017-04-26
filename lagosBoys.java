@@ -10,6 +10,7 @@ public class lagosBoys implements Bot {
 	private BoardAPI board;
 	private PlayerAPI player;
 	private DiceAPI dice;
+	private boolean paid = false, usedCard = false;
 	private String command;
 	private boolean checkForMonopoly = false;
 	private boolean rolled = false;
@@ -140,10 +141,47 @@ public class lagosBoys implements Bot {
 			}
 
 
+			if(player.isInJail()){
+				if(player.hasGetOutOfJailCard()){
+					command = "card";
+					usedCard = true;
+					return command;
+				}
+
+				else if(player.getBalance() - 50 > 200){
+					command = "pay";
+					paid = true;
+					return command;
+				}
+
+				else{
+					if(!rolled){
+						command = "roll";
+						rolled = true;
+
+						return command;
+					}else{
+
+						command = "done";
+						rolled = false;
+						return command;
+
+					}
+				}
+			}
+
+
+			boolean rolledToLeaveJail = !paid && !usedCard ;			
+			usedCard = paid = false;
+
+
+
 			if(!rolled){
+
 				command = "roll";
 				rolled = true;
 				return command;
+
 			}
 
 			if( (board.getSquare(player.getPosition()) instanceof Property) && !board.getProperty(player.getPosition()).isOwned() ){
@@ -160,38 +198,7 @@ public class lagosBoys implements Bot {
 			if(player.passedGo()) numberOfTimesGoneRound++;
 
 
-			if(player.isInJail()){
-				if(player.hasGetOutOfJailCard()){
-					command = "card";
-					return command;
-				}
 
-				else if(player.getBalance() - 50 > 200){
-					command = "pay";
-					return command;
-				}
-				else{
-					if(!rolled){
-						command = "roll";
-						rolled = true;
-						
-						return command;
-					}
-				}
-			}
-
-
-			if(player.isInJail() && rolled){
-
-				command = "done";
-				rolled = false;
-				return command;
-
-			}
-
-			
-			
-			
 			for (Property property: player.getProperties()) {
 
 				if(!property.isMortgaged()){
@@ -205,7 +212,12 @@ public class lagosBoys implements Bot {
 				return command;
 			}
 
-			if(rolled){
+			if(dice.isDouble() && !rolledToLeaveJail){
+				command = "roll";
+				return command;
+			}
+
+			else if(rolled){
 				command = "done";
 				rolled = false;
 				return command;
@@ -308,12 +320,46 @@ public class lagosBoys implements Bot {
 			}
 
 
+			if(player.isInJail()){
+
+				if(player.hasGetOutOfJailCard()  && jailCount ==1){
+					command = "card";
+					usedCard = true;
+					return command;
+				}
+
+				else if(!rolled){
+					command = "roll";
+					rolled = true;
+					jailCount++;
+
+					return command;
+				}else{
+
+					command = "done";
+					rolled = false;
+					return command;
+
+				}
+
+			}
+
+			boolean rolledToLeaveJail = !usedCard ;			
+			usedCard = paid = false;
+
+			if(!player.isInJail()){
+				jailCount=0;
+			}
+
 
 			if(!rolled){
+
 				command = "roll";
 				rolled = true;
 				return command;
+
 			}
+
 
 			if( (board.getSquare(player.getPosition()) instanceof Property) && !board.getProperty(player.getPosition()).isOwned() ){
 
@@ -328,26 +374,10 @@ public class lagosBoys implements Bot {
 
 			if(player.passedGo()) numberOfTimesGoneRound++;
 
-			if(player.isInJail() && player.hasGetOutOfJailCard()  && jailCount ==1){
-				command = "card";
-				return command;
-			}
 
-			if(player.isInJail()){
 
-				if(!rolled){
-					command = "roll";
-					rolled = true;
-					jailCount++;
-					
-					return command;
-				}
 
-			}
 
-			if(!player.isInJail()){
-				jailCount=0;
-			}
 
 
 			for (Property property: player.getProperties()) {
@@ -369,7 +399,7 @@ public class lagosBoys implements Bot {
 				for (Site site: sitesWithMonopoly) {
 
 					if(isFrequentlyLandedOn(site)){
-						while(site.canBuild(1) && (player.getBalance()-site.getBuildingPrice())>500){
+						while(!site.isMortgaged() && (site.canBuild(1) && (player.getBalance()-site.getBuildingPrice())>500)){
 							command = "build";						
 							return command + " " + site.getShortName() + " " + 1; 
 						}
@@ -381,7 +411,7 @@ public class lagosBoys implements Bot {
 				if(propertiesBuiltOn<sitesWithMonopoly.size() ){
 					for (Site site: sitesWithMonopoly) {
 						if(!isFrequentlyLandedOn(site)){
-							while(site.canBuild(1) && (player.getBalance()-site.getBuildingPrice())>500){
+							while(!site.isMortgaged() && (site.canBuild(1) && (player.getBalance()-site.getBuildingPrice())>500)){
 								command = "build";
 								return command + " " + site.getShortName() + " " + 1; 
 							}
@@ -417,16 +447,6 @@ public class lagosBoys implements Bot {
 			}
 
 
-			if(player.isInJail() && rolled){
-
-				command = "done";
-				rolled = false;
-				return command;
-
-			}
-
-
-
 			for (Property property: player.getProperties()) {
 
 				if(!property.isMortgaged()){
@@ -434,13 +454,18 @@ public class lagosBoys implements Bot {
 					break;
 				}
 			}
-			
+
 			if(bankrupt){
 				command = "bankrupt";
 				return command;
 			}
 
-			if(rolled){
+			if(dice.isDouble() && !rolledToLeaveJail){
+				command = "roll";
+				return command;
+			}
+
+			else if(rolled){
 				command = "done";
 				rolled = false;
 				return command;
