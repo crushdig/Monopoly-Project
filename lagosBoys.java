@@ -18,7 +18,7 @@ public class lagosBoys implements Bot {
 	private int jailCount = 0;
 	boolean bankrupt = false;
 
-	ArrayList<ColourGroup> frequentlyLandedOn = new ArrayList<ColourGroup>();
+	ArrayList<ColourGroup> frequentlyLandedOn = new ArrayList<ColourGroup>();//Stores frequently landed on properties
 
 	lagosBoys (BoardAPI board, PlayerAPI player, DiceAPI dice) {
 		this.board = board;
@@ -37,6 +37,13 @@ public class lagosBoys implements Bot {
 	}
 
 	public String getCommand () {
+		
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		ArrayList<Site> playerSites = new ArrayList<Site>();
 		ArrayList<Site> sitesWithMonopoly = new ArrayList<Site>();
@@ -45,8 +52,10 @@ public class lagosBoys implements Bot {
 		ArrayList<Property> mortgagedProperties = new ArrayList<Property>();
 
 
+		//Early Stages of the game
 		if(numberOfTimesGoneRound<=4){
 
+			//Check if bankrupt and mortgage properties until not bankrupt, utilities, sites and stations are mortgaged in that order
 			if(player.getBalance() < 0){
 
 				bankrupt = true;
@@ -141,6 +150,7 @@ public class lagosBoys implements Bot {
 			}
 
 
+			//use card or pay immediately at early stages
 			if(player.isInJail()){
 				if(player.hasGetOutOfJailCard()){
 					command = "card";
@@ -184,6 +194,7 @@ public class lagosBoys implements Bot {
 
 			}
 
+			//Buy properties if the purchase won't leave you almost bankrupt
 			if( (board.getSquare(player.getPosition()) instanceof Property) && !board.getProperty(player.getPosition()).isOwned() ){
 
 				if( player.getBalance() - board.getProperty(player.getPosition()).getPrice() > 100){
@@ -195,19 +206,12 @@ public class lagosBoys implements Bot {
 			}
 
 
-			if(player.passedGo()) numberOfTimesGoneRound++;
+			if(player.passedGo()) numberOfTimesGoneRound++;//Keeps track of number of times you went round the board
 
 
 
-			for (Property property: player.getProperties()) {
 
-				if(!property.isMortgaged()){
-					bankrupt = false;
-					break;
-				}
-			}
-
-			if(bankrupt){
+			if(player.getBalance()<0){
 				command = "bankrupt";
 				return command;
 			}
@@ -225,9 +229,13 @@ public class lagosBoys implements Bot {
 
 
 		}
-
+		
+		
+		
+		//Late stages of game
 		else{
 
+			//Check if bankrupt and mortgage properties until not bankrupt, utilities, sites and stations are mortgaged in that order
 			if(player.getBalance() < 0){
 
 				bankrupt = true;
@@ -319,7 +327,7 @@ public class lagosBoys implements Bot {
 
 			}
 
-
+			//Stay in jail as long as possible
 			if(player.isInJail()){
 
 				if(player.hasGetOutOfJailCard()  && jailCount ==1){
@@ -377,9 +385,7 @@ public class lagosBoys implements Bot {
 
 
 
-
-
-
+			//Build on properties with monopoly
 			for (Property property: player.getProperties()) {
 
 				if(property instanceof Site){
@@ -399,7 +405,7 @@ public class lagosBoys implements Bot {
 				for (Site site: sitesWithMonopoly) {
 
 					if(isFrequentlyLandedOn(site)){
-						while(!site.isMortgaged() && (site.canBuild(1) && (player.getBalance()-site.getBuildingPrice())>500)){
+						while(!site.isMortgaged() && (site.canBuild(1) && (player.getBalance()-site.getBuildingPrice())>200)){
 							command = "build";						
 							return command + " " + site.getShortName() + " " + 1; 
 						}
@@ -411,7 +417,7 @@ public class lagosBoys implements Bot {
 				if(propertiesBuiltOn<sitesWithMonopoly.size() ){
 					for (Site site: sitesWithMonopoly) {
 						if(!isFrequentlyLandedOn(site)){
-							while(!site.isMortgaged() && (site.canBuild(1) && (player.getBalance()-site.getBuildingPrice())>500)){
+							while(!site.isMortgaged() && (site.canBuild(1) && (player.getBalance()-site.getBuildingPrice())>200)){
 								command = "build";
 								return command + " " + site.getShortName() + " " + 1; 
 							}
@@ -431,6 +437,7 @@ public class lagosBoys implements Bot {
 				}
 			}
 
+			//Redeem mortgaged properties
 			if(mortgagedProperty){
 
 				for (Property property: mortgagedProperties) {
@@ -454,8 +461,9 @@ public class lagosBoys implements Bot {
 					break;
 				}
 			}
+			
 
-			if(bankrupt){
+			if(bankrupt && player.getBalance()<0){
 				command = "bankrupt";
 				return command;
 			}
@@ -475,10 +483,11 @@ public class lagosBoys implements Bot {
 		}
 
 
-		// Add your code here
+
 		return command;
 	}
 
+	
 	public boolean isFrequentlyLandedOn(Site site) {
 
 		boolean answer = false;
@@ -496,8 +505,9 @@ public class lagosBoys implements Bot {
 		return answer;
 	}
 
+	//Says chance unless the person has many houses or a hotel
 	public String getDecision () {
-		// Add your code here
+
 		String decision = "chance";
 
 		if(player.getNumHousesOwned()>1 || player.getNumHotelsOwned()>0){
